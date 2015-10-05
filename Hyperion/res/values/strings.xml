@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="app_name">Hyperion</string>
+
+    <string name="fire">Fire</string>
+    <string name="left">Left</string>
+    <string name="right">Right</string>
+
+</resources>
