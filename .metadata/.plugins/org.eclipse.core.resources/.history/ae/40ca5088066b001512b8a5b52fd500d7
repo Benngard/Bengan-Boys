@@ -1,0 +1,94 @@
+package com.example.hyperion;
+
+import android.app.Fragment;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.Button;
+
+/**
+ * @author Emzeror
+ *
+ */
+public class Playfield extends Fragment
+{
+	private View view;
+	
+	private static final Bus bus = new Bus ();
+	
+	private static final int BUTTON_LEFT = R.id.button_left;
+	private Button buttonLeft;
+	
+	private static final int BUTTON_RIGHT = R.id.button_right;
+	private Button buttonRight;
+	
+	private final static int BUTTON_FIRE = R.id.button_fire;
+	private Button buttonFire;	
+	
+	@Override
+	public void onCreate (Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+	}
+	
+	@Override
+	public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {		
+		
+		container.addView(bus.getPowerComponent().getView(getActivity()));
+		
+		view = inflater.inflate(R.layout.playfield_layout, container, false);
+		
+		buttonLeft = (Button) view.findViewById(BUTTON_LEFT);
+		buttonLeft.setOnClickListener(new OnClickListener() {			
+			@Override
+			public void onClick(View v) {
+				left ();
+			}
+		});
+		
+		buttonRight = (Button) view.findViewById(BUTTON_RIGHT);
+		buttonRight.setOnClickListener(new OnClickListener() {			
+			@Override
+			public void onClick(View v) {
+				right ();
+			}
+		});
+		
+		buttonFire = (Button) view.findViewById(BUTTON_FIRE);
+		buttonFire.setOnClickListener(new OnClickListener() {			
+			@Override
+			public void onClick(View v) {
+				fire ();
+			}
+		});
+		
+		return view;
+	}
+	
+	/**
+	 * Public getter for bus.
+	 * 
+	 * @return current instance of bus
+	 */
+	public Bus getBus() {
+		return bus;
+	}
+	
+	/**
+	 * 
+	 */
+	private void fire () {
+		if (bus.getPowerComponent().firePower()) {
+			// spawn lightning
+		}
+	}
+	
+	private void left () {
+		// move left
+	}
+	
+	private void right () {
+		// move right
+	}	
+}

@@ -8,11 +8,15 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+/**
+ * @author Emzeror
+ *
+ */
 public class Playfield extends Fragment
 {
 	private View view;
 	
-	private Bus bus = new Bus ();
+	private static final Bus bus = new Bus ();
 	
 	private static final int BUTTON_LEFT = R.id.button_left;
 	private Button buttonLeft;
@@ -27,7 +31,6 @@ public class Playfield extends Fragment
 	public void onCreate (Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 	}
-	
 	@Override
 	public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {		
 		
@@ -62,20 +65,34 @@ public class Playfield extends Fragment
 		return view;
 	}
 	
+	/**
+	 * Public getter for bus.
+	 * 
+	 * @return current instance of bus
+	 */
 	public Bus getBus() {
 		return bus;
 	}
 	
+	/**
+	 * 
+	 */
 	private void fire () {
 		if (bus.getPowerComponent().firePower()) {
 			// spawn lightning
 		}
 	}
 	
+	/**
+	 * 
+	 */
 	private void left () {
 		// move left
 	}
 	
+	/**
+	 * 
+	 */
 	private void right () {
 		// move right
 	}	

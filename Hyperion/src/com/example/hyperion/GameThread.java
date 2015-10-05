@@ -5,6 +5,13 @@ import android.app.FragmentTransaction;
 import android.os.Handler;
 import android.os.Looper;
 
+/**
+ * To-Write
+ * 
+ * @author 		Mattias Benngård
+ * @version		1.0
+ * @since		2015-10-05
+ */
 public class GameThread extends Thread
 {
 	private final Activity activity;
@@ -12,16 +19,26 @@ public class GameThread extends Thread
 	
 	private Playfield playfield = new Playfield ();
 	
+	/**
+	 * 
+	 * @param activity
+	 */
 	public GameThread (Activity activity) {
        this.activity = activity;
        
        activity.runOnUiThread(this);
 	}
 	
+	/**
+	 * Enables the game thread to be run
+	 */
 	public void startRunning () {
 		isRunning = true;
 	}
 	
+	/**
+	 * Stops the game thread from running
+	 */
 	public void stopRunning () {
 		isRunning = false;
 	}

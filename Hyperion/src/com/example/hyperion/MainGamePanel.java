@@ -5,10 +5,21 @@ import android.content.Context;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+/**
+ * To-Write
+ * 
+ * @author 		Mattias Benngård
+ * @version		1.0
+ * @since		2015-10-05
+ */
 public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 {
 	private static GameThread gameThread;
 	
+	/**
+	 * 
+	 * @param context
+	 */
 	public MainGamePanel(Context context) {
 		super(context);
 
