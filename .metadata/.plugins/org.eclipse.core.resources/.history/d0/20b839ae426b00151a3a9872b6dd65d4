@@ -21,7 +21,7 @@ public class GameThread extends Thread
 	private Playfield playfield = new Playfield ();
 	
 	/**
-	 * Main game thread, initialized from Main Game Panel.
+	 * 
 	 * @param activity - current active activity to launch thread in
 	 */
 	public GameThread (Activity activity) {

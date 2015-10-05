@@ -18,7 +18,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 	private static GameThread gameThread;
 	
 	/**
-	 * Initializes the main game panel, initialized from MainActivity
+	 * Initializes the main game panel, 
 	 * @param context - in which context to work in
 	 */
 	public MainGamePanel(Context context) {
