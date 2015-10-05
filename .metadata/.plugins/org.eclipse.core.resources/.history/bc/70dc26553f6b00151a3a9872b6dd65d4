@@ -12,7 +12,6 @@ import android.os.Looper;
  * @version		0.1
  * @since		2015-10-05
  */
-
 public class GameThread extends Thread
 {
 	private final Activity activity;
@@ -22,7 +21,7 @@ public class GameThread extends Thread
 	
 	/**
 	 * 
-	 * @param activity - current active activity to launch thread in
+	 * @param activity
 	 */
 	public GameThread (Activity activity) {
        this.activity = activity;

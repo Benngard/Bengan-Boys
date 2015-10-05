@@ -1,4 +1,4 @@
-package com.example.hyeprion;
+package com.example.hyperion;
 
 import android.app.Activity;
 import android.content.Context;
@@ -12,14 +12,14 @@ import android.view.View;
  * Power Component for Buss, handles all display and handling of Power for the Buss
  * Internal class PowerComponentView to update PowerBar
  * 
- * @author 		Mattias BenngÃ¥rd
+ * @author 		Mattias Benngård
  * @version		1.0
  * @since		2015-09-30
  */
 public class PowerComponent
 {
 	/**
-	 * View Holder
+	 * View Holder, keeps reference to invoke `.invalidate()` for new data
 	 */
 	private PowerComponentView view;
 	
@@ -37,12 +37,15 @@ public class PowerComponent
 	private static int power 						= POWER_MAX;
 
 	/**
+	 * Initializes the view for power bar and returns it. If it already has been initialized then just returns it.
 	 * 
-	 * @param activity
-	 * @return
+	 * @param activity - current active activity to render in
+	 * @return view object of power bar
 	 */
 	public View getView (Activity activity) {
-		view = new PowerComponentView(activity);
+		if (view == null) {
+			view = new PowerComponentView(activity);
+		}
 		return view;
 	}
 		
@@ -71,7 +74,7 @@ public class PowerComponent
 		return true;
 	}
 	
-	/**x
+	/**
 	 * Drains power from the buss, uses POWER_DRAIN constant to subtract from power.
 	 * 
 	 * @return	if the power has been completely drained or not
@@ -88,8 +91,8 @@ public class PowerComponent
 	
 	/**
 	 * Inner class responsible for drawing the PowerBar
-	 * import android.view.View;
-	 * @author 		Mattias BenngÃ¥rd
+	 * 
+	 * @author 		Mattias Benngård
 	 * @version		1.0
 	 * @since		2015-09-30
 	 */
@@ -108,8 +111,8 @@ public class PowerComponent
 		private final Rect powerBar = new Rect (GUI_BAR_X, GUI_BAR_Y, GUI_BAR_X + GUI_BAR_WIDTH_MAX, GUI_BAR_HEIGHT);
 		
 		/**
-		 * 
-		 * @param context
+		 * Initializes a new PowerComponentView
+		 * @param context - in which context to render in
 		 */
 		public PowerComponentView (Context context) {
 			super (context);

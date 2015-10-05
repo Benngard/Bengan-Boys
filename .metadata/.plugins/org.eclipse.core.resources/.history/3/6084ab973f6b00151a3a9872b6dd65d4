@@ -1,10 +1,17 @@
-package com.example.hyprion;
+package com.example.hyperion;
 
 import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.os.Handler;
 import android.os.Looper;
 
+/**
+ * To-Write
+ * 
+ * @author 		Mattias Benngård
+ * @version		0.1
+ * @since		2015-10-05
+ */
 public class GameThread extends Thread
 {
 	private final Activity activity;
@@ -12,16 +19,26 @@ public class GameThread extends Thread
 	
 	private Playfield playfield = new Playfield ();
 	
+	/**
+	 * 
+	 * @param activity - current active activity to launch thread in
+	 */
 	public GameThread (Activity activity) {
        this.activity = activity;
        
        activity.runOnUiThread(this);
 	}
 	
+	/**
+	 * Enables the game thread to be run
+	 */
 	public void startRunning () {
 		isRunning = true;
 	}
 	
+	/**
+	 * Stops the game thread from running
+	 */
 	public void stopRunning () {
 		isRunning = false;
 	}

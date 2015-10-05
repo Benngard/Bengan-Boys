@@ -12,6 +12,7 @@ import android.view.SurfaceView;
  * @version		1.0
  * @since		2015-10-05
  */
+
 public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 {
 	private static GameThread gameThread;

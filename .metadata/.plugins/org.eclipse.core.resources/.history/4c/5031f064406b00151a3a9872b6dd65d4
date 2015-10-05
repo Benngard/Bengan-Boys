@@ -95,7 +95,7 @@ public class Playfield extends Fragment
 	}
 	
 	/**
-	 * On-click-listener for Right Button.
+	 * On-click-listener for Fire Button.
 	 */
 	private void right () {
 		// move right

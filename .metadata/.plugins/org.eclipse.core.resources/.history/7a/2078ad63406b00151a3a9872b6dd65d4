@@ -8,33 +8,39 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+/**
+ * To-Write
+ * 
+ * @author 		Mattias Benngård
+ * @version		0.1
+ * @since		2015-10-05
+ */
+
 public class Playfield extends Fragment
 {
 	private View view;
 	
-	private Bus bus = new Bus ();
-	//private PowerComponent pc = new PowerComponent();
+	private static final Bus bus = new Bus ();
 	
-	private static final int BUTTON_LEFT = R.id.button1;
+	private static final int BUTTON_LEFT = R.id.button_left;
 	private Button buttonLeft;
 	
-	private static final int BUTTON_RIGHT = R.id.button1;
+	private static final int BUTTON_RIGHT = R.id.button_right;
 	private Button buttonRight;
 	
-	private final static int BUTTON_FIRE = R.id.button1;
+	private final static int BUTTON_FIRE = R.id.button_fire;
 	private Button buttonFire;	
 	
 	@Override
 	public void onCreate (Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 	}
-	
 	@Override
 	public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {		
 		
 		container.addView(bus.getPowerComponent().getView(getActivity()));
 		
-		view = inflater.inflate(R.layout.fragment_playfield, container, false);
+		view = inflater.inflate(R.layout.playfield_layout, container, false);
 		
 		buttonLeft = (Button) view.findViewById(BUTTON_LEFT);
 		buttonLeft.setOnClickListener(new OnClickListener() {			
@@ -63,20 +69,34 @@ public class Playfield extends Fragment
 		return view;
 	}
 	
+	/**
+	 * Public getter for bus.
+	 * 
+	 * @return current instance of bus
+	 */
 	public Bus getBus() {
 		return bus;
 	}
 	
+	/**
+	 * Asdfg
+	 */
 	private void fire () {
 		if (bus.getPowerComponent().firePower()) {
 			// spawn lightning
 		}
 	}
 	
+	/**
+	 * Asdfg
+	 */
 	private void left () {
 		// move left
 	}
 	
+	/**
+	 * Asdfg
+	 */
 	private void right () {
 		// move right
 	}	

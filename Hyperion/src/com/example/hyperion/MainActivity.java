@@ -12,6 +12,7 @@ import android.view.WindowManager;
  * @version		1.0
  * @since		2015-10-05
  */
+
 public class MainActivity extends Activity
 {
 	@Override
