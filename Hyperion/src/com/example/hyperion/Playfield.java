@@ -22,13 +22,13 @@ public class Playfield extends Fragment
 {
 	private Bus bus = new Bus ();
 	
-	private static final int BUTTON_LEFT = R.id.button1;
+	private static final int BUTTON_LEFT = R.id.button_left;
 	private static Button buttonLeft;
 	
-	private static final int BUTTON_RIGHT = R.id.button1;
+	private static final int BUTTON_RIGHT = R.id.button_right;
 	private static Button buttonRight;
 	
-	private final static int BUTTON_FIRE = R.id.button1;
+	private final static int BUTTON_FIRE = R.id.button_fire;
 	private static Button buttonFire;	
 	
 	@Override
