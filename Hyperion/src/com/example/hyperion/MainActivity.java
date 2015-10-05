@@ -6,11 +6,11 @@ import android.view.Window;
 import android.view.WindowManager;
 
 /**
- * Main Activity for Project Hyperion, initializes MainGamePanel
+ * Main Activity for Project Hyperion. Sets content view to MainGamePanel.
  * 
- * @author 		Mattias Benngård
+ * @author 		Mattias Benngard
  * @version		1.0
- * @since		2015-10-05
+ * @since		2015-09-30
  */
 
 public class MainActivity extends Activity

@@ -2,67 +2,70 @@ package com.example.hyperion;
 
 import android.app.Activity;
 import android.app.FragmentTransaction;
-import android.os.Handler;
-import android.os.Looper;
+import android.util.Log;
 
 /**
- * To-Write
+ * Main Game Thread for Project Hyperion. Currently initializes the playfield.
  * 
- * @author 		Mattias Benngård
- * @version		0.1
- * @since		2015-10-05
+ * @author 		Mattias Benngard
+ * @version		1.0
+ * @since		2015-09-30
  */
 
 public class GameThread extends Thread
 {
 	private final Activity activity;
-	private boolean isRunning;
+	private boolean running;
 	
-	private Playfield playfield = new Playfield ();
+	private static final Playfield playfield = new Playfield ();
 	
 	/**
-	 * Main game thread, initialized from Main Game Panel.
-	 * @param activity - current active activity to launch thread in
+	 * Initializes a game thread to perform executions in.
+	 * @param activity - current activity to execute game thread in.
 	 */
 	public GameThread (Activity activity) {
        this.activity = activity;
-       
-       activity.runOnUiThread(this);
 	}
 	
 	/**
-	 * Enables the game thread to be run
+	 * Public setter for running.
+	 * 
+	 * @param value - if main thread should be executing or not.
 	 */
-	public void startRunning () {
-		isRunning = true;
+	public void setRunning (boolean value) {
+		running = value;
 	}
 	
 	/**
-	 * Stops the game thread from running
+	 * Public getter for running.
+	 * 
+	 * @return if main thread is running or not.
 	 */
-	public void stopRunning () {
-		isRunning = false;
+	public boolean isRunning () {
+		return running;
 	}
 	
 	@Override
 	public void run () {
-	
-		FragmentTransaction ft = activity.getFragmentManager().beginTransaction();
+    	FragmentTransaction ft = activity.getFragmentManager().beginTransaction();
 		ft.add(android.R.id.content, playfield);
 		ft.commit();
-		
-		Handler refresh = new Handler(Looper.getMainLooper());
-		refresh.post(new Runnable() {
-		    public void run()
-		    {
-		    	while (isRunning) {
-			    	playfield.getBus().getPowerComponent().drainPower();
-			    	try {
-						sleep (1000);
-					} catch (InterruptedException e) {
-					}
-		    	}
-		    }
-		});
+    	
+    	while (running) {
+    		
+    		activity.runOnUiThread(new Runnable() {
+    		     @Override
+    		     public void run() {
+    		    	 playfield.getBus().getPowerComponent().drainPower();
+    		    }
+    		});
+	    	
+	    	try {
+				sleep (1000);
+			} catch (InterruptedException e) {
+				running = false;
+				Log.e(getName(), "Main loop could not sleep.");
+			}
+    	}
 	}
 }

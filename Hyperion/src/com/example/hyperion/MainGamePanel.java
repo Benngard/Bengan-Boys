@@ -6,11 +6,11 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 /**
- * To-Write
+ * Main Game View for Project Hyperion. Initializes game thread.
  * 
- * @author 		Mattias Benngård
+ * @author 		Mattias Benngard
  * @version		1.0
- * @since		2015-10-05
+ * @since		2015-09-30
  */
 
 public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
@@ -18,8 +18,8 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 	private static GameThread gameThread;
 	
 	/**
-	 * Initializes the main game panel, initialized from MainActivity
-	 * @param context - in which context to work in
+	 * Initializes the Main Game View.
+	 * @param context - which context to initialize game thread in.
 	 */
 	public MainGamePanel(Context context) {
 		super(context);
@@ -34,12 +34,16 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
-		gameThread.startRunning();
-		gameThread.start();
+		if (gameThread.isRunning() == false) {
+			gameThread.setRunning(true);
+			gameThread.start();
+		} else {
+			gameThread.start();
+		}
 	}
 
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
-		gameThread.stopRunning();
+		gameThread.setRunning(false);
 	}
 }

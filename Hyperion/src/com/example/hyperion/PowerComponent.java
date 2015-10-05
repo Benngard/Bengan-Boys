@@ -12,15 +12,15 @@ import android.view.View;
  * Power Component for Buss, handles all display and handling of Power for the Buss
  * Internal class PowerComponentView to update PowerBar
  * 
- * @author 		Mattias Benngård
+ * @author 		Mattias Benngard
  * @version		1.0
  * @since		2015-09-30
  */
 
 public class PowerComponent
-{
+{	
 	/**
-	 * View Holder, keeps reference to invoke `.invalidate()` for new data
+	 * View Holder
 	 */
 	private PowerComponentView view;
 	
@@ -29,7 +29,7 @@ public class PowerComponent
 	 */
 	private static final int POWER_GLOBE_VALUE 		= 25;
 	private static final int POWER_FIRE_COST 		= 5;
-	private static final int POWER_DRAIN 			= 10;
+	private static final int POWER_DRAIN 			= 1;
 	
 	/**
 	 * Power Value
@@ -38,15 +38,13 @@ public class PowerComponent
 	private static int power 						= POWER_MAX;
 
 	/**
-	 * Initializes the view for power bar and returns it. If it already has been initialized then just returns it.
+	 * Public getter for power component view, also initializes it.
 	 * 
-	 * @param activity - current active activity to render in
-	 * @return view object of power bar
+	 * @param activity - current active activity.
+	 * @return view of power component.
 	 */
 	public View getView (Activity activity) {
-		if (view == null) {
-			view = new PowerComponentView(activity);
-		}
+		view = new PowerComponentView(activity);
 		return view;
 	}
 		
@@ -93,27 +91,36 @@ public class PowerComponent
 	/**
 	 * Inner class responsible for drawing the PowerBar
 	 * 
-	 * @author 		Mattias Benngård
+	 * @author 		Mattias Benngard
 	 * @version		1.0
 	 * @since		2015-09-30
 	 */
-	private class PowerComponentView extends View
+	private static class PowerComponentView extends View
 	{	
 		/**
 		 * Power GUI
 		 */
 		private final Paint paint 				= new Paint();
-		private final int GUI_BAR_X 			= 100;
+		private final int GUI_BAR_X 			= 10;
 		private final int GUI_BAR_Y 			= 10;
+		private final int GUI_BAR_WIDTH_MAX 	= 200;
 		private final int GUI_BAR_HEIGHT 		= 30;
-		private final int GUI_BAR_WIDTH_MAX 	= 200;		
 		
-		private final Rect powerFrame = new Rect (GUI_BAR_X-1, GUI_BAR_Y-1, GUI_BAR_X + GUI_BAR_WIDTH_MAX+1, GUI_BAR_HEIGHT+1);
-		private final Rect powerBar = new Rect (GUI_BAR_X, GUI_BAR_Y, GUI_BAR_X + GUI_BAR_WIDTH_MAX, GUI_BAR_HEIGHT);
+		private final Rect powerFrame = new Rect (
+				GUI_BAR_X-1,
+				GUI_BAR_Y-1,
+				GUI_BAR_X + GUI_BAR_WIDTH_MAX+1,
+				GUI_BAR_Y + GUI_BAR_HEIGHT+1);
+		private final Rect powerBar = new Rect (
+				GUI_BAR_X,
+				GUI_BAR_Y,
+				GUI_BAR_X +	GUI_BAR_WIDTH_MAX,
+				GUI_BAR_Y + GUI_BAR_HEIGHT);
 		
 		/**
-		 * Initializes a new PowerComponentView
-		 * @param context - in which context to render in
+		 * Initializes a view for the Power Component.
+		 * 
+		 * @param context - current context to render in.
 		 */
 		public PowerComponentView (Context context) {
 			super (context);
