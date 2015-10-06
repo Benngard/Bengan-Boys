@@ -56,12 +56,13 @@ public class GameThread extends Thread
     		activity.runOnUiThread(new Runnable() {
     		     @Override
     		     public void run() {
+					 playfield.getBackground().backgroundMovement();
     		    	 playfield.getBus().getPowerComponent().drainPower();
     		    }
     		});
 	    	
 	    	try {
-				sleep (1000);
+				sleep (33);
 			} catch (InterruptedException e) {
 				running = false;
 				Log.e(getName(), "Main loop could not sleep.");
