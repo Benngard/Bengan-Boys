@@ -115,8 +115,6 @@ public class Playfield extends Fragment
 		// move right
 	}
 
-
-
 	/**
 	 * Background graphics for the game.
      * Internal class BackgroundView to update background scrolling
