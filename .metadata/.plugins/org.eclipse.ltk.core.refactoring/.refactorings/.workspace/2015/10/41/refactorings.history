@@ -1,3 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">&#x0A;<refactoring comment="Delete resource &apos;Hyperion&apos;" deleteContents="false" description="Delete resource &apos;Hyperion&apos;" element1="/Hyperion" flags="7" id="org.eclipse.ltk.core.refactoring.delete.resources" resources="1" stamp="1444009226589"/>&#x0A;<refactoring comment="Delete resource &apos;appcompat_v7&apos;" deleteContents="false" description="Delete resource &apos;appcompat_v7&apos;" element1="/appcompat_v7" flags="7" id="org.eclipse.ltk.core.refactoring.delete.resources" resources="1" stamp="1444009227522"/>
-</session>

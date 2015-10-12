@@ -1,3 +1,0 @@
-INDEX VERSION 1.127+C:\Users\Emzeror\Documents\GitHub\Bengan-Boys\.metadata\.plugins\org.eclipse.jdt.core
-391090673.index
-1699265567.index
