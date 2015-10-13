@@ -26,8 +26,10 @@ import android.widget.Button;
 
 public class Playfield extends Fragment
 {
-	private Bus bus = new Bus ();
+	private Bus bus;
 	private Background background;
+	
+	private final List<LightingBolt> lightingBolts = new ArrayList<>();
 	
 	private static final int BUTTON_LEFT = R.id.button_left;
 	private static Button buttonLeft;
@@ -49,6 +51,9 @@ public class Playfield extends Fragment
 		DisplayMetrics metrics = new DisplayMetrics();
 		this.getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
 		background = new Background(metrics);
+		bus = new Bus(metrics);
+		
+		container.addView(bus.getView(getActivity()));
 
 		container.addView(background.getView(getActivity()));
 		container.addView(bus.getPowerComponent().getView(getActivity()));
@@ -75,7 +80,7 @@ public class Playfield extends Fragment
 		buttonFire.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				fire();
+				fire(container);
 			}
 		});
 
@@ -96,23 +101,34 @@ public class Playfield extends Fragment
 	 * Action Listener for Fire Button. Tries to fire lightning bolts, if the power is enough for the bus.
 	 */
 	private void fire () {
-		if (bus.getPowerComponent().firePower()) {
-			// fire lightning
-		}
+	  	if (bus.getPowerComponent().firePower()) {
+        		LightingBolt lb = new LightingBolt();
+            		lightingBolts.add(lb);
+        	 	v.addView(lb.getView(getActivity()));
+        	}
 	}
+	
+	public void updateLightingBolts(){
+        for(LightingBolt lb: lightingBolts){
+            if(lb.bottom < 200){
+                lb.gone(lb.getView(getActivity()));
+            }
+            else { lb.update(); }
+        }
+    }
 	
 	/**
 	 * Action Listener for Left Button. Tries to move left, if there is a lane there.
 	 */
 	private void left () {
-		// move left
+		bus.moveLeft();
 	}
 	
 	/**
 	 * Action Listener for Right Button. Tries to move right, if there is a lane there.
 	 */
 	private void right () {
-		// move right
+		bus.moveRight();
 	}
 
 	/**
