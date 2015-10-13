@@ -2,23 +2,29 @@ package com.example.hyperion;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 
 /**
- * To-Write
+ * Initializes a bus on the background.
  *
  * @author 		Ola Andersson
- * @version		0.2
- * @since		-
+ * @version		0.3
+ * @since		2015-10-13
  */
 
 public class Bus
 {
     private final PowerComponent powerComponent = new PowerComponent ();
+    private Rect busRect;
 
     /**
      * Public getter for power component.
@@ -28,12 +34,35 @@ public class Bus
         return powerComponent;
     }
 
-    private int left = 440;
-    private final int top = 1400;
-    private int right = 640;
-    private final int bottom = 1600;
+    public static int height;
+    public static int width;
+    public static int lane;
+
+    private double left;
+    private final double top;
+    private double right;
+    private final double bottom;
+
+    private final double LEFT_SCALE_FACTOR = 0.4629629;
+    private final double TOP_SCALE_FACTOR = 0.7291666;
+    private final double RIGHT_SCALE_FACTOR = 0.5555556;
+    private final double BOTTOM_SCALE_FACTOR = 0.8333333;
+
+    public static final double MOVE_SCALE_FACTOR = 0.15;
+
 
     private BusView view;
+
+    public Bus(DisplayMetrics metrics){
+        height = metrics.heightPixels;
+        width = metrics.widthPixels;
+        left = width * LEFT_SCALE_FACTOR;
+        top = height * TOP_SCALE_FACTOR;
+        right = width * RIGHT_SCALE_FACTOR;
+        bottom = height * BOTTOM_SCALE_FACTOR;
+        busRect = new Rect((int)left,(int)top,(int)right,(int)bottom);
+        lane = 3;
+    }
 
 
     /**
@@ -48,14 +77,13 @@ public class Bus
      * @return returns the lane.
      */
     public int getLane(){
-
-        return (left-40)/200;
+        return lane;
     }
 
     /**
      *
      * @param activity
-     * @return creates a new Bus2View object if view is null.
+     * @return creates a new BusView object if view is null.
      */
     public View getView(Activity activity){
         if(view == null){
@@ -69,8 +97,9 @@ public class Bus
      */
     public void moveLeft(){
         if(canMoveLeft()){
-            left -= 200;
-            right -= 200;
+            left -= width * MOVE_SCALE_FACTOR;
+            right -= width * MOVE_SCALE_FACTOR;
+            lane -= 1;
             update();
         }
     }
@@ -80,8 +109,9 @@ public class Bus
      */
     public void moveRight(){
         if(canMoveRight()){
-            right += 200;
-            left += 200;
+            right += width * MOVE_SCALE_FACTOR;
+            left += width * MOVE_SCALE_FACTOR;
+            lane += 1;
             update();
         }
     }
@@ -91,7 +121,7 @@ public class Bus
      * @return true if it can, otherwise false.
      */
     private boolean canMoveLeft(){
-        return left != 40? true : false;
+        return lane == 1 ? false : true;
     }
 
     /**
@@ -99,20 +129,22 @@ public class Bus
      * @return true if it can, otherwise false.
      */
     private boolean canMoveRight(){
-        return right != 1040? true : false;
+        return lane == 5 ? false : true;
     }
 
-    /**
-     * Innerclass for drawing the bus.
-     */
     private class BusView extends View {
 
-        private Rect busRect = new Rect(left,top,right,bottom);
-        private Paint paint = new Paint();
+        private Drawable drawableBus;
+
+        /**
+         * Initializes a lightingbolt on the background.
+         *
+         * @param context - current context to render in.
+         */
 
         private BusView(Context context) {
             super(context);
-            paint.setColor(Color.GREEN);
+            drawableBus = getResources().getDrawable(R.drawable.bussstor);
         }
 
         @Override
@@ -127,8 +159,9 @@ public class Bus
         @Override
         protected void onDraw(Canvas canvas) {
             super.onDraw(canvas);
-            busRect.set(left, top, right, bottom);
-            canvas.drawRect(busRect,paint);
+            busRect.set((int) left, (int) top, (int) right, (int) bottom);
+            drawableBus.setBounds(busRect);
+            drawableBus.draw(canvas);
         }
     }
 }
