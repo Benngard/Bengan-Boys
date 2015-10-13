@@ -100,7 +100,7 @@ public class Playfield extends Fragment
 	/**
 	 * Action Listener for Fire Button. Tries to fire lightning bolts, if the power is enough for the bus.
 	 */
-	private void fire () {
+	private void fire (ViewGroup v) {
 	  	if (bus.getPowerComponent().firePower()) {
         		LightingBolt lb = new LightingBolt();
             		lightingBolts.add(lb);
