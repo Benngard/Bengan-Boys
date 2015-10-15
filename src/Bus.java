@@ -18,7 +18,7 @@ import android.view.View;
  *
  * @author 		Ola Andersson
  * @version		1.0
- * @since		2015-10-13
+ * @since		2015-09-29
  */
 
 public class Bus
