@@ -58,6 +58,9 @@ public class GameThread extends Thread
     		     public void run() {
 					 playfield.getBackground().backgroundMovement();
     		    	 playfield.getBus().getPowerComponent().drainPower();
+    		    	 playfield.updateLightingBolts();
+                    	 playfield.updateBatteryCells();
+                    	 playfield.spawnBattery();
     		    }
     		});
 	    	
