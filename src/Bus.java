@@ -2,27 +2,26 @@ package com.example.hyperion;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Rect;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
+
+import com.example.hyprion.R;
 
 /**
  * Initializes a bus on the background.
  *
- * @author 		Ola Andersson
- * @version		1.0
- * @since		2015-09-29
+ * @author 		Ola Andersson, Daniel Edsinger
+ * @version		0.3
+ * @since		2015-10-13
  */
 
 public class Bus
 {
+    private BusView view;
+
     private final PowerComponent powerComponent = new PowerComponent ();
     private Rect busRect;
 
@@ -38,49 +37,27 @@ public class Bus
     public static int width;
     public static int lane;
 
-    private double left;
-    private final double top;
-    private double right;
-    private final double bottom;
-
-    private final double LEFT_SCALE_FACTOR = 0.4629629;
-    private final double TOP_SCALE_FACTOR = 0.7291666;
-    private final double RIGHT_SCALE_FACTOR = 0.5555556;
-    private final double BOTTOM_SCALE_FACTOR = 0.8333333;
+    private int laneLength;
+    private int pixelLength;
 
     public static final double MOVE_SCALE_FACTOR = 0.15;
-
-
-    private BusView view;
 
     public Bus(DisplayMetrics metrics){
         height = metrics.heightPixels;
         width = metrics.widthPixels;
-        left = width * LEFT_SCALE_FACTOR;
-        top = height * TOP_SCALE_FACTOR;
-        right = width * RIGHT_SCALE_FACTOR;
-        bottom = height * BOTTOM_SCALE_FACTOR;
-        busRect = new Rect((int)left,(int)top,(int)right,(int)bottom);
+
+        double roadRatio = 28.0f/ 320.0f;
+        laneLength = (int)(roadRatio * height);
+        pixelLength = laneLength/28;
         lane = 3;
     }
-    
-    public Rect getRect(){
-        return busRect;
-    }
+
 
     /**
      * Is being called after moving the bus to update graphics.
      */
     public void update() {
         view.invalidate();
-    }
-
-    /**
-     *
-     * @return returns the lane.
-     */
-    public int getLane(){
-        return lane;
     }
 
     /**
@@ -100,8 +77,7 @@ public class Bus
      */
     public void moveLeft(){
         if(canMoveLeft()){
-            left -= width * MOVE_SCALE_FACTOR;
-            right -= width * MOVE_SCALE_FACTOR;
+            busRect.set(busRect.left - laneLength, busRect.top, busRect.right - laneLength, busRect.bottom);
             lane -= 1;
             update();
         }
@@ -112,8 +88,7 @@ public class Bus
      */
     public void moveRight(){
         if(canMoveRight()){
-            right += width * MOVE_SCALE_FACTOR;
-            left += width * MOVE_SCALE_FACTOR;
+            busRect.set(busRect.left + laneLength, busRect.top, busRect.right + laneLength, busRect.bottom);
             lane += 1;
             update();
         }
@@ -134,14 +109,6 @@ public class Bus
     private boolean canMoveRight(){
         return lane == 5 ? false : true;
     }
-    
-    /**
-     * Inner class for drawing Bus.
-     *
-     * @author Ola Andersson
-     * @version 1.0
-     * @since 2015-09-29
-     */
 
     private class BusView extends View {
 
@@ -155,12 +122,20 @@ public class Bus
 
         private BusView(Context context) {
             super(context);
-            drawableBus = getResources().getDrawable(R.drawable.bussstor);
-        }
+            drawableBus = getResources().getDrawable(R.drawable.bus);
 
-        @Override
-        protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-            super.onSizeChanged(w, h, oldw, oldh);
+            float drawableHeight = drawableBus.getIntrinsicHeight();
+            double expectedRatio = 50.0f/ 320.0f;
+            double realRatio = drawableHeight / height;
+            double ratioMultiplier = expectedRatio/realRatio;
+
+            // New size for rocks to match screen size
+            int newDrawablesHeight = (int) (drawableHeight*ratioMultiplier);
+
+            // Placing busRect to right position
+            int left = (int)((width/2) - (0.5 * laneLength));
+            int right = (int)((width/2) + (0.5 * laneLength));
+            busRect = new Rect(left, (height-laneLength) - newDrawablesHeight, right, height-laneLength);
         }
 
         /**
@@ -170,7 +145,6 @@ public class Bus
         @Override
         protected void onDraw(Canvas canvas) {
             super.onDraw(canvas);
-            busRect.set((int) left, (int) top, (int) right, (int) bottom);
             drawableBus.setBounds(busRect);
             drawableBus.draw(canvas);
         }
