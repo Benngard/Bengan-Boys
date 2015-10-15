@@ -28,6 +28,7 @@ public class Playfield extends Fragment
 {
 	private Bus bus;
 	private Background background;
+	private Obstacles obstacles;
 	private int counter;
 
 	private final List<LightingBolt> lightingBolts = new ArrayList<>();
@@ -53,10 +54,11 @@ public class Playfield extends Fragment
 		this.getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
 		background = new Background(metrics);
 		bus = new Bus(metrics);
+		obstacles = new Obstacles(metrics);
 		
-		container.addView(bus.getView(getActivity()));
-
 		container.addView(background.getView(getActivity()));
+		container.addView(bus.getView(getActivity()));
+		container.addView(obstacles.getView(getActivity()));
 		container.addView(bus.getPowerComponent().getView(getActivity()));
 		
 		final View view = inflater.inflate(R.layout.fragment_playfield, container, false);
