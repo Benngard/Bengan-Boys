@@ -17,7 +17,7 @@ import android.view.View;
  * Initializes a bus on the background.
  *
  * @author 		Ola Andersson
- * @version		0.3
+ * @version		1.0
  * @since		2015-10-13
  */
 
@@ -131,6 +131,14 @@ public class Bus
     private boolean canMoveRight(){
         return lane == 5 ? false : true;
     }
+    
+    /**
+     * Inner class for drawing Bus.
+     *
+     * @author Ola Andersson
+     * @version 1.0
+     * @since 2015-09-29
+     */
 
     private class BusView extends View {
 
