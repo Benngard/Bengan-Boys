@@ -63,7 +63,10 @@ public class Bus
         busRect = new Rect((int)left,(int)top,(int)right,(int)bottom);
         lane = 3;
     }
-
+    
+    public Rect getRect(){
+        return busRect;
+    }
 
     /**
      * Is being called after moving the bus to update graphics.
