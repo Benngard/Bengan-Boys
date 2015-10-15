@@ -19,7 +19,7 @@ import android.widget.Button;
 /**
  * Playfield Fragment, initializes GUI for Playfield; Left- Right, Fire Button.
  * 
- * @author 		Mattias Benngard, Daniel Edsinger
+ * @author 		Mattias Benngard, Daniel Edsinger, Ola Andersson
  * @version		1.1
  * @since		2015-10-06
  */
@@ -28,7 +28,8 @@ public class Playfield extends Fragment
 {
 	private Bus bus;
 	private Background background;
-	
+	private int counter;
+
 	private final List<LightingBolt> lightingBolts = new ArrayList<>();
 	
 	private static final int BUTTON_LEFT = R.id.button_left;
@@ -108,15 +109,45 @@ public class Playfield extends Fragment
         	}
 	}
 	
+	/**
+     	* Updates the lightingBolts on the screen.
+     	*/
 	public void updateLightingBolts(){
-        for(LightingBolt lb: lightingBolts){
-            if(lb.bottom < 200){
-                lb.gone(lb.getView(getActivity()));
-            }
-            else { lb.update(); }
-        }
-    }
-	
+        	for(LightingBolt lb: lightingBolts){
+            		if(lb.bottom < 200){
+        			 lb.gone(lb.getView(getActivity()));
+            		}
+            		else { lb.update(); }
+        	}
+    	}
+    	
+    	/**
+     	* Spawns a battery on a random lane so the bus can get more energy
+	*/
+    	public void spawnBattery(){
+        	if (counter == 200) {
+	            Random rand = new Random();
+	            int randomInt = rand.nextInt(5);
+	            Energy energy = new Energy(randomInt);
+	            batteryCells.add(energy);
+	            getViewGroup().addView(energy.getView(getActivity()));
+	            counter = 0;
+        	}
+		counter++;
+    	}
+    	
+    	/**
+     	* Updates the batteryCells on the screen.
+     	*/
+    	public void updateBatteryCells(){
+        	for(Energy e: batteryCells){
+            		if(e.bottom < -100){
+                		e.gone(e.getView(getActivity()));
+            		}
+            		else { e.update(); }
+        	}
+    	}
+
 	/**
 	 * Action Listener for Left Button. Tries to move left, if there is a lane there.
 	 */
