@@ -13,7 +13,7 @@ import android.view.View;
  * Spawns a lightingbolt on a specific lane
  *
  * @author 		Ola Andersson
- * @version		0.3
+ * @version		1.0
  * @since		2015-09-29
  */
 public class LightingBolt {
@@ -92,7 +92,7 @@ public class LightingBolt {
      * Inner class for drawing lightingbolts.
      *
      * @author Ola Andersson
-     * @version 0.3
+     * @version 1.0
      * @since 2015-09-29
      */
     private class LightingBoltView extends View {
