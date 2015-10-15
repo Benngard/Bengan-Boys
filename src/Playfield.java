@@ -274,4 +274,6 @@ public class Playfield extends Fragment
      * @return - instance of background.
      */
     public Background getBackground() { return background;}
+	
+	public Obstacles getObstacles() {return obstacles;}
 }
