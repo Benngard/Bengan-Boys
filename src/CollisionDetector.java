@@ -1,26 +1,43 @@
 package com.example.hyperion;
 
 import android.graphics.Rect;
-import android.view.View;
+
+import com.example.hyperion.ObstacleObjects.Collectible;
+import com.example.hyperion.ObstacleObjects.Invulnerable;
+import com.example.hyperion.ObstacleObjects.Rocks;
+
+import java.util.List;
 
 /**
- * Created by Anton on 2015-10-12.
- * Basic outline for the class CollisionDetector...
- * @version  0.0
+ * @author Anton Andrén
+ * @since 2015-10-10
+ * @version  0.5
+ *
+ * Class for detecting and handeling collisions between objects in Playfield.
  */
 public class CollisionDetector {
 
-    public void checkCollsion (View first, View second) {
-        //There might be a need to check so that top < bottom in the case where a View just enters the screen.
-        Rect firstRect = new Rect ();
-        first.getHitRect(firstRect);
+    public void checkCollsion (List<LightingBolt>lightingBolts, Bus bus, Obstacles obstacles) {
+        Rect busRect = bus.getRect();
 
-        Rect secondRect = new Rect();
-        second.getHitRect(secondRect);
+        for (LightingBolt lb : lightingBolts){
+            for (Invulnerable inv : obstacles.getInvulnerables()){
+                if(lb.getRect().intersect(inv.getRect())){
+                    // despawn lightning
+                }
+            }
+        }
 
-        /* What class is responsible for handeling collisions? update pending. */
-        if(Rect.intersects (firstRect, secondRect)){
-            //Do something
+        for (Invulnerable invulnerable : obstacles.getInvulnerables()){
+            if(busRect.intersect(invulnerable.getRect())){
+                // Trigger game over.
+            }
+        }
+
+        for (Collectible collectible : obstacles.getCollectibles()){
+            if(busRect.intersect(collectible.getRect())){
+                bus.getPowerComponent().addPower();
+            }
         }
     }
 
