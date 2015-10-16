@@ -19,6 +19,8 @@ public class GameThread extends Thread
 	
 	private static final Playfield playfield = new Playfield ();
 	
+	private int score;
+	
 	/**
 	 * Initializes a game thread to perform executions in.
 	 * @param activity - current activity to execute game thread in.
@@ -72,5 +74,22 @@ public class GameThread extends Thread
 				Log.e(getName(), "Main loop could not sleep.");
 			}
     	}
+	}
+	
+	
+	/**
+	 * Resets the game, for another playthrough.
+	 */
+	private void replayGame () {
+		score = 0;
+		playfield.reset ();
+	}
+
+	/**
+	 * Finishes the activity and quits the application.
+	 */
+	private void quitGame () {
+		activity.finish();
+		System.exit(0);
 	}
 }
