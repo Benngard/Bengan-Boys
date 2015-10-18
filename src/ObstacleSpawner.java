@@ -3,7 +3,7 @@ package com.example.hyperion;
 
 /**
  * @author Anton Andrén
- * @version 0.7
+ * @version 0.75
  * @since 2015-10-15
  *
  * ObstacleSpawner is responsible for spawning all the objects spawning on the top of the screen.
@@ -32,25 +32,24 @@ public class ObstacleSpawner {
         frequencyTimer++;
         if (frequencyTimer % 15 == 0) {
             switch (bussReader.getEvent()) {
-                case DOOR: {
+                case DOOR:
                     obstacles.spawnFenceLeft();
                     obstacles.spawnFenceRight();
                     obstacles.spawnPower(3);
-                }
-                case INDICATOR: {
+                    break;
+                case INDICATOR:
                     obstacles.spawnRockLeft();
                     obstacles.spawnPower(5);
-                }
-                case STOP: {
+                    break;
+                case STOP:
                     obstacles.spawnRockRight();
                     obstacles.spawnPower(1);
-                }
-                case EMPTY: {
-                    obstacles.spawnPower(2);
-                }
-                default: {
                     break;
-                }
+                case EMPTY:
+                    obstacles.spawnPower(2);
+                    break;
+                default:
+                    break;
             }
         }
     }

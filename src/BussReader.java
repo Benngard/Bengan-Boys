@@ -1,8 +1,5 @@
 package com.example.hyperion;
 
-
-import com.benganboys.example.jsontest.SignalType;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -17,7 +14,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 /**
  * @author Anton Andrén
- * @version 0.5
+ * @version 0.75
  * @since 2015-09-27
  *
  * BussReader
@@ -33,7 +30,7 @@ public class BussReader
 	private final LinkedList<SignalType> eventQueue = new LinkedList<>();
 	private String key = "Z3JwNTU6aGROZzhUaU5VbA==";
 	
-	public BussReader()  {
+	public BussReader() throws IOException {
 
 	}
 	
@@ -46,8 +43,25 @@ public class BussReader
 		checkDoorState();
 		checkIndicatorState();
 	}
+	
+	public String test () throws IOException, JSONException {
+		long t2 = System.currentTimeMillis();
+		long t1 = t2 - (10000);
+		
+		String indicatorUrl = "https://ece01.ericsson.net:4443/ecity?dgw=Ericsson$Vin_Num_001&resourceSpec=Ericsson$Turn_Signals_Value&t1=" + t1 + "&t2=" + t2;
+		URL indicatorRequestURL = new URL(indicatorUrl);
+		HttpsURLConnection indicatorCon = (HttpsURLConnection) indicatorRequestURL.openConnection();
+		indicatorCon.setRequestMethod("GET");
+		indicatorCon.setRequestProperty("Authorization", "Basic " + key);
+		BufferedReader indicatorReader = new BufferedReader(new InputStreamReader(indicatorCon.getInputStream()));
 
+		JSONObject json = new JSONObject(indicatorReader.readLine());
 
+		String tmp = indicatorReader.readLine();
+		indicatorReader.close();
+		return tmp;
+	}
+	
 	/**
 	 * Opens a connection the the door sensor then reads and updates the eventQueue accordingly before closing the connection.
 	 * @throws IOException
@@ -100,18 +114,18 @@ public class BussReader
 		currentIndicatorValue = indicatorJson.getString("value");
 		
 		switch (currentIndicatorValue) {
-		case ("010"): {
+		case ("010"):
 			if(!indicatorFlag.equals(currentIndicatorValue)){
 				eventQueue.add(SignalType.INDICATOR);
 				indicatorFlag = "010";
-				}
+				break;
 			}
-		case ("000"): {
+		case ("000"):
 			if(!indicatorFlag.equals(currentIndicatorValue)){
 				indicatorFlag = "000";
-				}
+				break;
 		}
-		default: {break;}
+		default: break;
 		}
 		indicatorReader.close();
 	}
@@ -149,6 +163,6 @@ public class BussReader
 	}
 	
 	public SignalType getEvent () {
-		return !eventQueue.isEmpty() ? eventQueue.poll() : SignalType.EMPTY;
+		return eventQueue.poll();
 	}
 }
