@@ -73,6 +73,14 @@ public class Bus
     }
 
     /**
+     * Get the Rect of the bus
+     * @return - The rect on the bus
+     */
+    public Rect getRect() {
+        return busRect;
+    }
+
+    /**
      * Moves the bus one step to the left if canMoveLeft returns true.
      */
     public void moveLeft(){
