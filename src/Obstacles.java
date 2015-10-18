@@ -150,7 +150,6 @@ public class Obstacles {
     public void spawnRockLeft() {
         invulnerables.add( new Rocks(new Rect(rocksRectL)) );
         Log.i(TAG, "Spawning rock");
-        view.invalidate();
     }
 
     /**
@@ -159,7 +158,6 @@ public class Obstacles {
     public void spawnRockRight() {
         invulnerables.add( new Rocks(new Rect(rocksRectR)) );
         Log.i(TAG, "Spawning rock");
-        view.invalidate();
     }
 
     /**
@@ -168,7 +166,6 @@ public class Obstacles {
     public void spawnFenceLeft() {
         invulnerables.add( new FenceLeft(new Rect(fenceRectL)) );
         Log.i(TAG, "Spawning fence");
-        view.invalidate();
     }
 
     /**
@@ -177,7 +174,6 @@ public class Obstacles {
     public void spawnFenceRight() {
         invulnerables.add( new FenceRight(new Rect(fenceRectR)) );
         Log.i(TAG, "Spawning fence");
-        view.invalidate();
     }
 
     /**
@@ -192,7 +188,6 @@ public class Obstacles {
             spawnOnLane(lane, tmp);
 
             collectibles.add(new Power((tmp)));
-            view.invalidate();
             Log.i(TAG, "Spawning power");
         }
     }
@@ -278,7 +273,6 @@ public class Obstacles {
         Drawable drawablePower;
         //Add moore
 
-
         /**
          * Initializes a view for the obstacles.
          *
@@ -346,7 +340,7 @@ public class Obstacles {
 
             float drawableHeight = drawableRocks.getIntrinsicHeight();
             float drawableWidth = drawableRocks.getIntrinsicWidth();
-            double expectedRatio = 26.0f/ 320.0f;
+            double expectedRatio = 24.0f/ 320.0f;
             double realRatio = drawableHeight / height;
             double ratioMultiplier = expectedRatio/realRatio;
 
@@ -358,7 +352,7 @@ public class Obstacles {
         }
 
         @Override
-        public void onDraw(Canvas canvas) {
+        protected  void onDraw(Canvas canvas) {
             super.onDraw(canvas);
             // Draw all the invulnerable objects
             for(Invulnerable obstacle : invulnerables){

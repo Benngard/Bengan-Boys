@@ -22,32 +22,32 @@ import javax.net.ssl.HttpsURLConnection;
  * and updating the eventQueue based on the signals
  */
 
-public class BussReader 
+public class BussReader
 {
 	private boolean stopFlag = false;
 	private boolean doorFlag = false;
 	private String indicatorFlag = "000";
 	private final LinkedList<SignalType> eventQueue = new LinkedList<>();
 	private String key = "Z3JwNTU6aGROZzhUaU5VbA==";
-	
+
 	public BussReader() throws IOException {
 
 	}
-	
+
 	/**
 	 * Checks all the signals
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public void checkAllSignals () throws IOException, JSONException {
 		checkStopState();
 		checkDoorState();
 		checkIndicatorState();
 	}
-	
+
 	public String test () throws IOException, JSONException {
 		long t2 = System.currentTimeMillis();
 		long t1 = t2 - (10000);
-		
+
 		String indicatorUrl = "https://ece01.ericsson.net:4443/ecity?dgw=Ericsson$Vin_Num_001&resourceSpec=Ericsson$Turn_Signals_Value&t1=" + t1 + "&t2=" + t2;
 		URL indicatorRequestURL = new URL(indicatorUrl);
 		HttpsURLConnection indicatorCon = (HttpsURLConnection) indicatorRequestURL.openConnection();
@@ -61,7 +61,7 @@ public class BussReader
 		indicatorReader.close();
 		return tmp;
 	}
-	
+
 	/**
 	 * Opens a connection the the door sensor then reads and updates the eventQueue accordingly before closing the connection.
 	 * @throws IOException
@@ -71,7 +71,7 @@ public class BussReader
 		boolean currentDoorValue;
 		long t2 = System.currentTimeMillis();
 		long t1 = t2 - (1000 * 120);
-		
+
 		String doorUrl = "https://ece01.ericsson.net:4443/ecity?dgw=Ericsson$Vin_Num_001&sensorSpec=Ericsson$Opendoor&t1=" + t1 + "&t2=" + t2;
 		URL doorRequestURL = new URL(doorUrl);
 		HttpsURLConnection doorCon = (HttpsURLConnection) doorRequestURL.openConnection();
@@ -80,20 +80,20 @@ public class BussReader
 		BufferedReader doorReader = new BufferedReader(new InputStreamReader(doorCon.getInputStream()));
 		JSONObject doorJson = new JSONObject(doorReader.readLine());
 		currentDoorValue = doorJson.getBoolean("value");
-		
+
 		if (currentDoorValue && !doorFlag){
 			eventQueue.add(SignalType.DOOR);
 			doorReader.close();
 			return;
 		}
-		
+
 		if (!currentDoorValue && doorFlag){
 			doorFlag = false;
 		}
-		
+
 		doorReader.close();
 	}
-	
+
 	/**
 	 * Opens a connection to the indecator sensor and updates the eventQueue accordingly before closing the connection.
 	 * @throws IOException
@@ -103,7 +103,7 @@ public class BussReader
 		String currentIndicatorValue;
 		long t2 = System.currentTimeMillis();
 		long t1 = t2 - (1000 * 120);
-		
+
 		String indicatorUrl = "https://ece01.ericsson.net:4443/ecity?dgw=Ericsson$Vin_Num_001&sensorSpec=Ericsson$Turn_Signals&t1=" + t1 + "&t2=" + t2;
 		URL indicatorRequestURL = new URL(indicatorUrl);
 		HttpsURLConnection indicatorCon = (HttpsURLConnection) indicatorRequestURL.openConnection();
@@ -112,24 +112,24 @@ public class BussReader
 		BufferedReader indicatorReader = new BufferedReader(new InputStreamReader(indicatorCon.getInputStream()));
 		JSONObject indicatorJson = new JSONObject(indicatorReader.readLine());
 		currentIndicatorValue = indicatorJson.getString("value");
-		
+
 		switch (currentIndicatorValue) {
-		case ("010"):
-			if(!indicatorFlag.equals(currentIndicatorValue)){
-				eventQueue.add(SignalType.INDICATOR);
-				indicatorFlag = "010";
-				break;
-			}
-		case ("000"):
-			if(!indicatorFlag.equals(currentIndicatorValue)){
-				indicatorFlag = "000";
-				break;
-		}
-		default: break;
+			case ("010"):
+				if(!indicatorFlag.equals(currentIndicatorValue)){
+					eventQueue.add(SignalType.INDICATOR);
+					indicatorFlag = "010";
+					break;
+				}
+			case ("000"):
+				if(!indicatorFlag.equals(currentIndicatorValue)){
+					indicatorFlag = "000";
+					break;
+				}
+			default: break;
 		}
 		indicatorReader.close();
 	}
-	
+
 	/**
 	 * Opens a connection to the stop sensor then reads and updates the eventQueue accordingly before closing the connection
 	 * @throws IOException
@@ -139,7 +139,7 @@ public class BussReader
 		boolean currentStopValue;
 		long t2 = System.currentTimeMillis();
 		long t1 = t2 - (1000 * 120);
-		
+
 		String stopUrl = "https://ece01.ericsson.net:4443/ecity?dgw=Ericsson$Vin_Num_001&sensorSpec=Ericsson$Stop_Pressed&t1=" + t1 + "&t2=" + t2;
 		URL stopRequestURL = new URL(stopUrl);
 		HttpsURLConnection stopCon = (HttpsURLConnection) stopRequestURL.openConnection();
@@ -148,20 +148,20 @@ public class BussReader
 		BufferedReader stopReader = new BufferedReader(new InputStreamReader(stopCon.getInputStream()));
 		JSONObject stopJson = new JSONObject(stopReader.readLine());
 		currentStopValue = stopJson.getBoolean("value");
-		
+
 		if (currentStopValue  && !stopFlag){
 			eventQueue.add(SignalType.STOP);
 			stopFlag = true;
 			stopReader.close();
 			return;
 		}
-		
+
 		if (!currentStopValue && stopFlag){
 			stopFlag = false;
 			stopReader.close();
 		}
 	}
-	
+
 	public SignalType getEvent () {
 		return eventQueue.poll();
 	}

@@ -6,15 +6,19 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 
 import com.example.hyprion.R;
+
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * Initializes a bus on the background.
  *
  * @author 		Ola Andersson, Daniel Edsinger
- * @version		0.3
+ * @version		0.4
  * @since		2015-10-13
  */
 
@@ -23,7 +27,9 @@ public class Bus
     private BusView view;
 
     private final PowerComponent powerComponent = new PowerComponent ();
+    private ArrayList<LightingBolt> lightingBolts;
     private Rect busRect;
+    private Rect lightningRect;
 
     /**
      * Public getter for power component.
@@ -33,23 +39,63 @@ public class Bus
         return powerComponent;
     }
 
-    public static int height;
-    public static int width;
-    public static int lane;
+    /**
+     * Public getter for lists of lightnings on screen.
+     * @return - list of lightnings.
+     */
+    public ArrayList<LightingBolt> getLightingBolts() { return  lightingBolts; }
 
-    private int laneLength;
-    private int pixelLength;
+    private int height;
+    private int width;
+    private int lane;
+    private double laneLength;
+    private double pixelLength;
+    private double scrollSpeed;
 
-    public static final double MOVE_SCALE_FACTOR = 0.15;
+    // Lane positions
+    private int laneOnePos;
+    private int laneOneEndPos;
+    private int laneTwoPos;
+    private int laneTwoEndPos;
+    private int laneThreePos;
+    private int laneThreeEndPos;
+    private int laneFourPos;
+    private int laneFourEndPos;
+    private int laneFivePos;
+    private int laneFiveEndPos;
 
+    /**
+     * Calculate where the positions of the lanes are.
+     *
+     * @param metrics - screen resolution.
+     */
     public Bus(DisplayMetrics metrics){
+        lightingBolts = new ArrayList<>();
         height = metrics.heightPixels;
         width = metrics.widthPixels;
-
-        double roadRatio = 28.0f/ 320.0f;
-        laneLength = (int)(roadRatio * height);
-        pixelLength = laneLength/28;
+        scrollSpeed = height/50.0f;
         lane = 3;
+
+        // Calculate where spawnposition is for each lane
+        double roadRatio = 28.0f/ 320.0f;
+        laneLength = roadRatio * height;
+        double pixelLength = (laneLength/28);
+
+        laneOnePos = (int) ((width/2) - (2.5*laneLength) + pixelLength);
+        laneOneEndPos = (int) ((width/2) - (1.5*laneLength) - pixelLength);
+
+        laneTwoPos = (int) ((width/2) - (1.5*laneLength) + pixelLength);
+        laneTwoEndPos = (int) ((width/2) - (0.5*laneLength)- pixelLength);
+
+        laneThreePos = (int) ((width/2) - (0.5*laneLength)+ pixelLength);
+        laneThreeEndPos = (int) ((width/2) + (0.5*laneLength) - pixelLength);
+
+        laneFourPos = (int) ((width/2) + (0.5*laneLength) + pixelLength);
+        laneFourEndPos = (int) ((width/2) + (1.5*laneLength)- pixelLength);
+
+        laneFivePos = (int) ((width/2) + (1.5*laneLength) + pixelLength);
+        laneFiveEndPos = (int) ((width/2) + (2.5*laneLength) - pixelLength);
+
     }
 
 
@@ -57,13 +103,24 @@ public class Bus
      * Is being called after moving the bus to update graphics.
      */
     public void update() {
+        //Iterator for invulnerable
+        for (Iterator iterator = lightingBolts.iterator(); iterator.hasNext();)
+        {
+            LightingBolt obstacle = (LightingBolt) iterator.next();
+            obstacle.moveObstacle(scrollSpeed);
+
+            if(obstacle.getRect().bottom < 0) {
+                iterator.remove();
+            }
+        }
         view.invalidate();
     }
 
     /**
+     * Public getter for bus view, also initializes it.
      *
-     * @param activity
-     * @return creates a new BusView object if view is null.
+     * @param activity - current active activity.
+     * @return view of bus.
      */
     public View getView(Activity activity){
         if(view == null){
@@ -81,13 +138,46 @@ public class Bus
     }
 
     /**
+     * Spawns a lightning on the lane the bus is on if there is enough power.
+     */
+    public void spawnLightning() {
+        if(powerComponent.firePower()){
+            switch(lane) {
+                case 1:
+                    lightningRect.set(laneOnePos, lightningRect.top, laneOneEndPos, lightningRect.bottom);
+                    lightingBolts.add(new LightingBolt( new Rect(lightningRect)) );
+                    break;
+
+                case 2:
+                    lightningRect.set(laneTwoPos, lightningRect.top, laneTwoEndPos, lightningRect.bottom);
+                    lightingBolts.add(new LightingBolt( new Rect(lightningRect)) );
+                    break;
+
+                case 3:
+                    lightningRect.set(laneThreePos, lightningRect.top, laneThreeEndPos, lightningRect.bottom);
+                    lightingBolts.add(new LightingBolt( new Rect(lightningRect)) );
+                    break;
+
+                case 4:
+                    lightningRect.set(laneFourPos, lightningRect.top, laneFourEndPos, lightningRect.bottom);
+                    lightingBolts.add(new LightingBolt( new Rect(lightningRect)) );
+                    break;
+
+                case 5:
+                    lightningRect.set(laneFivePos, lightningRect.top, laneFiveEndPos, lightningRect.bottom);
+                    lightingBolts.add(new LightingBolt( new Rect(lightningRect)) );
+                    break;
+            }
+        }
+    }
+
+    /**
      * Moves the bus one step to the left if canMoveLeft returns true.
      */
     public void moveLeft(){
         if(canMoveLeft()){
-            busRect.set(busRect.left - laneLength, busRect.top, busRect.right - laneLength, busRect.bottom);
+            busRect.set((int) (busRect.left - laneLength), busRect.top, (int)(busRect.right - laneLength), busRect.bottom);
             lane -= 1;
-            update();
         }
     }
 
@@ -96,9 +186,8 @@ public class Bus
      */
     public void moveRight(){
         if(canMoveRight()){
-            busRect.set(busRect.left + laneLength, busRect.top, busRect.right + laneLength, busRect.bottom);
+            busRect.set((int) (busRect.left + laneLength), busRect.top, (int)(busRect.right + laneLength), busRect.bottom);
             lane += 1;
-            update();
         }
     }
 
@@ -121,15 +210,24 @@ public class Bus
     private class BusView extends View {
 
         private Drawable drawableBus;
+        private Drawable drawableLightning;
 
         /**
          * Initializes a lightingbolt on the background.
          *
          * @param context - current context to render in.
          */
-
         private BusView(Context context) {
             super(context);
+
+            createBusRect();
+            createLightningRect();
+        }
+
+        /**
+         * Create a Rect for the bus to fit in.
+         */
+        private void createBusRect() {
             drawableBus = getResources().getDrawable(R.drawable.bus);
 
             float drawableHeight = drawableBus.getIntrinsicHeight();
@@ -137,17 +235,33 @@ public class Bus
             double realRatio = drawableHeight / height;
             double ratioMultiplier = expectedRatio/realRatio;
 
-            // New size for rocks to match screen size
+            // New size for bus to match screen size
             int newDrawablesHeight = (int) (drawableHeight*ratioMultiplier);
 
             // Placing busRect to right position
-            int left = (int)((width/2) - (0.5 * laneLength));
-            int right = (int)((width/2) + (0.5 * laneLength));
-            busRect = new Rect(left, (height-laneLength) - newDrawablesHeight, right, height-laneLength);
+            busRect = new Rect(laneThreePos,(int) ((height-laneLength) - newDrawablesHeight), laneThreeEndPos, (int)(height-laneLength));
         }
 
         /**
-         * Draws the bus with the given params.
+         * Creates the Rect to fit lightning graphics in.
+         */
+        public void createLightningRect() {
+            drawableLightning = getResources().getDrawable(R.drawable.lightning);
+
+            float drawableHeight = drawableLightning.getIntrinsicHeight();
+            double expectedRatio = 19.0f/ 320.0f;
+            double realRatio = drawableHeight / height;
+            double ratioMultiplier = expectedRatio/realRatio;
+
+            // New size for lightnings to match screen size
+            int newDrawablesHeight = (int) (drawableHeight*ratioMultiplier);
+
+            // Placing lightningsRect to right position
+            lightningRect = new Rect(0,(int) ((height-laneLength*2) - newDrawablesHeight), 0, (int)(height-laneLength*2));
+        }
+
+        /**
+         * Draws the bus and the lightningbolts.
          * @param canvas
          */
         @Override
@@ -155,6 +269,11 @@ public class Bus
             super.onDraw(canvas);
             drawableBus.setBounds(busRect);
             drawableBus.draw(canvas);
+
+            for(LightingBolt lightning : lightingBolts) {
+                drawableLightning.setBounds(lightning.getRect());
+                drawableLightning.draw(canvas);
+            }
         }
     }
 }

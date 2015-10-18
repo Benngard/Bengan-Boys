@@ -29,13 +29,13 @@ public class PowerComponent
 	 */
 	private static final int POWER_GLOBE_VALUE 		= 25;
 	private static final int POWER_FIRE_COST 		= 5;
-	private static final int POWER_DRAIN 			= 1;
+	private static final double POWER_DRAIN 		= 0.1f;
 	
 	/**
 	 * Power Value
 	 */
 	private static final int POWER_MAX 				= 100;
-	private static int power 						= POWER_MAX;
+	private static double power 					= POWER_MAX;
 
 	/**
 	 * Public getter for power component view, also initializes it.
@@ -44,7 +44,9 @@ public class PowerComponent
 	 * @return view of power component.
 	 */
 	public View getView (Activity activity) {
-		view = new PowerComponentView(activity);
+		if(view == null){
+			view = new PowerComponentView(activity);
+		}
 		return view;
 	}
 		
