@@ -1,5 +1,8 @@
 package com.example.hyperion;
 
+
+import com.benganboys.example.jsontest.SignalType;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -30,7 +33,7 @@ public class BussReader
 	private final LinkedList<SignalType> eventQueue = new LinkedList<>();
 	private String key = "Z3JwNTU6aGROZzhUaU5VbA==";
 	
-	public BussReader() throws IOException {
+	public BussReader()  {
 
 	}
 	
@@ -43,25 +46,8 @@ public class BussReader
 		checkDoorState();
 		checkIndicatorState();
 	}
-	
-	public String test () throws IOException, JSONException {
-		long t2 = System.currentTimeMillis();
-		long t1 = t2 - (10000);
-		
-		String indicatorUrl = "https://ece01.ericsson.net:4443/ecity?dgw=Ericsson$Vin_Num_001&resourceSpec=Ericsson$Turn_Signals_Value&t1=" + t1 + "&t2=" + t2;
-		URL indicatorRequestURL = new URL(indicatorUrl);
-		HttpsURLConnection indicatorCon = (HttpsURLConnection) indicatorRequestURL.openConnection();
-		indicatorCon.setRequestMethod("GET");
-		indicatorCon.setRequestProperty("Authorization", "Basic " + key);
-		BufferedReader indicatorReader = new BufferedReader(new InputStreamReader(indicatorCon.getInputStream()));
 
-		JSONObject json = new JSONObject(indicatorReader.readLine());
 
-		String tmp = indicatorReader.readLine();
-		indicatorReader.close();
-		return tmp;
-	}
-	
 	/**
 	 * Opens a connection the the door sensor then reads and updates the eventQueue accordingly before closing the connection.
 	 * @throws IOException
@@ -163,6 +149,6 @@ public class BussReader
 	}
 	
 	public SignalType getEvent () {
-		return eventQueue.poll();
+		return !eventQueue.isEmpty() ? eventQueue.poll() : SignalType.EMPTY;
 	}
 }

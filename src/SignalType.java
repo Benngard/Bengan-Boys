@@ -8,5 +8,5 @@ package com.example.hyperion;
  * Enum for keeping track of the different signals read from the buss
  */
 public enum SignalType {
-	STOP, INDICATOR, DOOR
+	STOP, INDICATOR, DOOR, EMPTY
 }
