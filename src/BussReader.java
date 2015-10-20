@@ -1,20 +1,24 @@
 package com.example.hyperion;
 
+import android.os.AsyncTask;
+import android.util.Log;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.LinkedList;
+import java.util.List;
 
-import javax.net.ssl.HttpsURLConnection;
 
 /**
  * @author Anton Andrén
- * @version 0.75
+ * @version 1.0
  * @since 2015-09-27
  *
  * BussReader
@@ -22,76 +26,93 @@ import javax.net.ssl.HttpsURLConnection;
  * and updating the eventQueue based on the signals
  */
 
-public class BussReader
+public class BussReader extends AsyncTask<LinkedList, Void, Void>
 {
 	private boolean stopFlag = false;
 	private boolean doorFlag = false;
-	private String indicatorFlag = "000";
-	private final LinkedList<SignalType> eventQueue = new LinkedList<>();
+	private boolean indicatorFlag = false;
+	private LinkedList<SignalType> eventQueue = new LinkedList<>();
 	private String key = "Z3JwNTU6aGROZzhUaU5VbA==";
+	private static final String TAG = "MyMessage";
 
-	public BussReader() throws IOException {
-
-	}
 
 	/**
-	 * Checks all the signals
-	 * @throws IOException
+	 * doInBackground is an AsyncTask invoked from playfield that runs the methods for connecting to the buss
+	 * and checking signals
+	 * @param params - type: LinkedList<SignalType> - the reference is stored and updated as a way of communicating information back to payfield.
+	 * @return - null
 	 */
-	public void checkAllSignals () throws IOException, JSONException {
-		checkStopState();
-		checkDoorState();
-		checkIndicatorState();
+	@Override
+	protected Void doInBackground(LinkedList... params) {
+		this.eventQueue = params[0];
+		try {
+			checkStopState();
+			checkDoorState();
+			checkIndicatorState();
+		} catch (IOException e) {
+			Log.i(TAG, "Exception thrown at check...: "+  e.toString());
+		} catch (JSONException e) {
+			Log.i(TAG, "Exception thrown at check...: " + e.toString());
+		}
+		return null;
 	}
-
-	public String test () throws IOException, JSONException {
-		long t2 = System.currentTimeMillis();
-		long t1 = t2 - (10000);
-
-		String indicatorUrl = "https://ece01.ericsson.net:4443/ecity?dgw=Ericsson$Vin_Num_001&resourceSpec=Ericsson$Turn_Signals_Value&t1=" + t1 + "&t2=" + t2;
-		URL indicatorRequestURL = new URL(indicatorUrl);
-		HttpsURLConnection indicatorCon = (HttpsURLConnection) indicatorRequestURL.openConnection();
-		indicatorCon.setRequestMethod("GET");
-		indicatorCon.setRequestProperty("Authorization", "Basic " + key);
-		BufferedReader indicatorReader = new BufferedReader(new InputStreamReader(indicatorCon.getInputStream()));
-
-		JSONObject json = new JSONObject(indicatorReader.readLine());
-
-		String tmp = indicatorReader.readLine();
-		indicatorReader.close();
-		return tmp;
-	}
-
+	
 	/**
 	 * Opens a connection the the door sensor then reads and updates the eventQueue accordingly before closing the connection.
 	 * @throws IOException
 	 * @throws JSONException
 	 */
-	public void checkDoorState() throws IOException, JSONException {
-		boolean currentDoorValue;
+	private void checkDoorState() throws IOException, JSONException {
+		boolean currentDoorValue = false;
 		long t2 = System.currentTimeMillis();
 		long t1 = t2 - (1000 * 120);
 
-		String doorUrl = "https://ece01.ericsson.net:4443/ecity?dgw=Ericsson$Vin_Num_001&sensorSpec=Ericsson$Opendoor&t1=" + t1 + "&t2=" + t2;
+		// Prepare the URL and create the Http connection.
+		String doorUrl = new String("https://ece01.ericsson.net:4443/ecity?dgw=Ericsson$Vin_Num_001&sensorSpec=Ericsson$Opendoor&t1=" + t1 + "&t2=" + t2);
 		URL doorRequestURL = new URL(doorUrl);
-		HttpsURLConnection doorCon = (HttpsURLConnection) doorRequestURL.openConnection();
+		HttpURLConnection doorCon = (HttpURLConnection) doorRequestURL.openConnection();
+
+		// Modify the Http connection
 		doorCon.setRequestMethod("GET");
 		doorCon.setRequestProperty("Authorization", "Basic " + key);
-		BufferedReader doorReader = new BufferedReader(new InputStreamReader(doorCon.getInputStream()));
-		JSONObject doorJson = new JSONObject(doorReader.readLine());
-		currentDoorValue = doorJson.getBoolean("value");
 
-		if (currentDoorValue && !doorFlag){
-			eventQueue.add(SignalType.DOOR);
-			doorReader.close();
-			return;
+		// Run the connection and store the response code
+		int responseCode = doorCon.getResponseCode();
+
+		Log.i(TAG, "Door response code: " + responseCode);
+
+		// download data, if the doors has open since last exec add to the eventQueue.
+		if (responseCode == 200) {
+			// download data, if the stop has been pressed since last exec add to the eventQueue.
+			if (responseCode == 200) {
+				BufferedReader doorReader = doorReader = new BufferedReader(new InputStreamReader(doorCon.getInputStream()));
+				String s = doorReader.readLine();
+
+				// reading is done for now
+				doorReader.close();
+
+				// the char at 70 is either [t]rue or [f]alse. This avoids JSON parsing.
+				if (s.charAt(70) == 't') {
+					currentDoorValue = true;
+				}
+				if (s.charAt(70) == 'f') {
+					currentDoorValue = false;
+				}
+
+				Log.i(TAG, "Char checked in door: " + s.charAt(70));
+
+				// determine if the state of the door has changed
+				if (currentDoorValue && (!doorFlag)) {
+					Log.i(TAG, "Adding door to eq");
+					eventQueue.add(SignalType.DOOR);
+					return;
+				}
+
+				if (!currentDoorValue && doorFlag) {
+					doorFlag = false;
+				}
+			}
 		}
-
-		if (!currentDoorValue && doorFlag){
-			doorFlag = false;
-		}
-
-		doorReader.close();
 	}
 
 	/**
@@ -99,70 +120,115 @@ public class BussReader
 	 * @throws IOException
 	 * @throws JSONException
 	 */
-	public void checkIndicatorState() throws IOException, JSONException {
-		String currentIndicatorValue;
+	private void checkIndicatorState() throws IOException, JSONException {
+		boolean currentIndicatorValue = false;
 		long t2 = System.currentTimeMillis();
 		long t1 = t2 - (1000 * 120);
 
-		String indicatorUrl = "https://ece01.ericsson.net:4443/ecity?dgw=Ericsson$Vin_Num_001&sensorSpec=Ericsson$Turn_Signals&t1=" + t1 + "&t2=" + t2;
+		// Prepare the URL and create the Http connection.
+		String indicatorUrl = new String ("https://ece01.ericsson.net:4443/ecity?dgw=Ericsson$Vin_Num_001&sensorSpec=Ericsson$Turn_Signals&t1=" + t1 + "&t2=" + t2);
 		URL indicatorRequestURL = new URL(indicatorUrl);
-		HttpsURLConnection indicatorCon = (HttpsURLConnection) indicatorRequestURL.openConnection();
+		HttpURLConnection indicatorCon = (HttpURLConnection) indicatorRequestURL.openConnection();
+
+		// Modify the Http connection
 		indicatorCon.setRequestMethod("GET");
 		indicatorCon.setRequestProperty("Authorization", "Basic " + key);
-		BufferedReader indicatorReader = new BufferedReader(new InputStreamReader(indicatorCon.getInputStream()));
-		JSONObject indicatorJson = new JSONObject(indicatorReader.readLine());
-		currentIndicatorValue = indicatorJson.getString("value");
 
-		switch (currentIndicatorValue) {
-			case ("010"):
-				if(!indicatorFlag.equals(currentIndicatorValue)){
-					eventQueue.add(SignalType.INDICATOR);
-					indicatorFlag = "010";
-					break;
-				}
-			case ("000"):
-				if(!indicatorFlag.equals(currentIndicatorValue)){
-					indicatorFlag = "000";
-					break;
-				}
-			default: break;
+		// Run the connection and store the response code
+		int responseCode = indicatorCon.getResponseCode();
+
+		Log.i(TAG, "indicator response code: " + responseCode);
+
+		// download data, if the Indicators has been turned on since last exec add to the eventQueue.
+		if (responseCode == 200) {
+			BufferedReader indicatorReader = null;
+			indicatorReader = new BufferedReader(new InputStreamReader(indicatorCon.getInputStream()));
+			String s = indicatorReader.readLine();
+
+			// Reading is done for now
+			indicatorReader.close();
+
+			// the char at 73, 74, 75 is either 0 or 1
+			if(s.charAt(73) == '0' && s.charAt(74) == '1' && s.charAt(75) == '1'){
+				currentIndicatorValue = true;
+			}
+			if(s.charAt(73) == '0' && s.charAt(74) == '0' && s.charAt(75) == '0'){
+				currentIndicatorValue = false;
+			}
+
+			// determine if the state of the stop indicator has changed
+			if (currentIndicatorValue && (!indicatorFlag)) {
+				Log.i(TAG, "Adding indicator to eq");
+				eventQueue.add(SignalType.INDICATOR);
+				indicatorFlag = true;
+				return;
+			}
+
+			if (!currentIndicatorValue && stopFlag) {
+				indicatorFlag = false;
+			}
 		}
-		indicatorReader.close();
 	}
-
+	
 	/**
 	 * Opens a connection to the stop sensor then reads and updates the eventQueue accordingly before closing the connection
 	 * @throws IOException
 	 * @throws JSONException
 	 */
-	public void checkStopState() throws IOException, JSONException {
-		boolean currentStopValue;
+	private void checkStopState() throws IOException, JSONException {
+		boolean currentStopValue = false;
 		long t2 = System.currentTimeMillis();
 		long t1 = t2 - (1000 * 120);
 
-		String stopUrl = "https://ece01.ericsson.net:4443/ecity?dgw=Ericsson$Vin_Num_001&sensorSpec=Ericsson$Stop_Pressed&t1=" + t1 + "&t2=" + t2;
+		// Prepare the URL and create the Http connection.
+		String stopUrl = new String("https://ece01.ericsson.net:4443/ecity?dgw=Ericsson$Vin_Num_001&sensorSpec=Ericsson$Stop_Pressed&t1=" + t1 + "&t2=" + t2);
 		URL stopRequestURL = new URL(stopUrl);
-		HttpsURLConnection stopCon = (HttpsURLConnection) stopRequestURL.openConnection();
+		HttpURLConnection stopCon = (HttpURLConnection) stopRequestURL.openConnection();
+
+		// Modify the Http connection
 		stopCon.setRequestMethod("GET");
 		stopCon.setRequestProperty("Authorization", "Basic " + key);
-		BufferedReader stopReader = new BufferedReader(new InputStreamReader(stopCon.getInputStream()));
-		JSONObject stopJson = new JSONObject(stopReader.readLine());
-		currentStopValue = stopJson.getBoolean("value");
 
-		if (currentStopValue  && !stopFlag){
-			eventQueue.add(SignalType.STOP);
-			stopFlag = true;
-			stopReader.close();
-			return;
-		}
+		// Run the connection and store the response code
+		int responseCode = responseCode = stopCon.getResponseCode();
 
-		if (!currentStopValue && stopFlag){
-			stopFlag = false;
+		Log.i(TAG, "stop response code: " + responseCode);
+
+		// download data, if the stop has been pressed since last exec add to the eventQueue.
+		if (responseCode == 200) {
+			BufferedReader stopReader = null;
+			stopReader = new BufferedReader(new InputStreamReader(stopCon.getInputStream()));
+			String s = stopReader.readLine();
+
+			//reading is done for now
 			stopReader.close();
+
+			// the char at 73 is either [t]rue or [f]alse. This avoids JSON parsing.
+			if(s.charAt(73) == 't'){
+				currentStopValue = true;
+			}
+			if(s.charAt(73) == 'f'){
+				currentStopValue = false;
+			}
+
+			Log.i(TAG, "Char checked in stop: " + s.charAt(73));
+
+			// determine if the state of the stop indicator has changed
+			if (currentStopValue && (!stopFlag)) {
+				Log.i(TAG, "Adding stop to eq");
+				eventQueue.add(SignalType.STOP);
+				stopFlag = true;
+				return;
+			}
+
+			if (!currentStopValue && stopFlag) {
+				stopFlag = false;
+			}
 		}
 	}
 
 	public SignalType getEvent () {
-		return eventQueue.poll();
+		return eventQueue.isEmpty() ? SignalType.EMPTY : eventQueue.poll();
 	}
+
 }

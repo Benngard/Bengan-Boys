@@ -3,7 +3,7 @@ package com.example.hyperion;
 
 /**
  * @author Anton Andrén
- * @version 0.5
+ * @version 1.0
  *
  * Enum for keeping track of the different signals read from the buss
  */

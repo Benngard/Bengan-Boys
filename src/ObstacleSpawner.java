@@ -1,9 +1,11 @@
 package com.example.hyperion;
 
 
+import android.util.Log;
+
 /**
  * @author Anton Andrén
- * @version 0.75
+ * @version 1.0
  * @since 2015-10-15
  *
  * ObstacleSpawner is responsible for spawning all the objects spawning on the top of the screen.
@@ -12,45 +14,37 @@ package com.example.hyperion;
 public class ObstacleSpawner {
 
     Obstacles obstacles;
-    BussReader bussReader;
-    int frequencyTimer = 0;
+    private static final String TAG = "MyMessage";
 
     /**
      * Constructor for the ObstacleSpawner, saves a reference of Onstacles and bussReader
      * @param obstacles
-     * @param bussReader
      */
-    public ObstacleSpawner (Obstacles obstacles, BussReader bussReader) {
+    public ObstacleSpawner (Obstacles obstacles) {
         this.obstacles = obstacles;
-        this.bussReader = bussReader;
     }
 
     /**
      * Spawns objects on the top of the screen based on the eventQueue in bussReader and also spawns energy refills.
      */
-    public void spawnObstacle () {
-        frequencyTimer++;
-        if (frequencyTimer % 15 == 0) {
-            switch (bussReader.getEvent()) {
-                case DOOR:
-                    obstacles.spawnFenceLeft();
-                    obstacles.spawnFenceRight();
-                    obstacles.spawnPower(3);
-                    break;
-                case INDICATOR:
-                    obstacles.spawnRockLeft();
-                    obstacles.spawnPower(5);
-                    break;
-                case STOP:
-                    obstacles.spawnRockRight();
-                    obstacles.spawnPower(1);
-                    break;
-                case EMPTY:
-                    obstacles.spawnPower(2);
-                    break;
-                default:
-                    break;
-            }
+    public void spawnObstacle (SignalType signalType) {
+        Log.i(TAG, "ObstacleSpawner current signal: " + signalType.toString());
+
+        switch (signalType) {
+            case DOOR:
+                obstacles.spawnFenceLeft();
+                obstacles.spawnFenceRight();
+                break;
+            case INDICATOR:
+                obstacles.spawnRockLeft();
+                break;
+            case STOP:
+                obstacles.spawnRockRight();
+                break;
+            case EMPTY:
+                break;
+            default:
+                break;
         }
     }
 }

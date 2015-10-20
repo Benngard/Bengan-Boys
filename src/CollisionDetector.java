@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * @author Anton Andrén
  * @since 2015-10-10
- * @version  0.75
+ * @version  1.0
  *
  * Class for detecting and handling collisions between objects in Playfield.
  */
@@ -29,7 +29,7 @@ public class CollisionDetector {
      * @param obstacles     - Contains lists of all the invulnerable and Collectible objects in the PlayField
      */
     public boolean checkCollsion (List<LightingBolt>lightingBolts, Bus bus, Obstacles obstacles) {
-        Rect busRect = bus.getRect();
+        Rect busRect = new Rect(bus.getRect());
 
 
         for (LightingBolt lb : lightingBolts){

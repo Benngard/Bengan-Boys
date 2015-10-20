@@ -8,21 +8,28 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import org.json.JSONException;
+
+import java.io.IOException;
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.Random;
 
 /**
  * Playfield Fragment, initializes GUI for Playfield; Left- Right, Fire Button.
  *
  * @author 		Mattias Benngard, Daniel Edsinger, Ola Andersson
- * @version		1.2
+ * @version		1.3
  * @since		2015-10-06
  */
 
@@ -31,8 +38,15 @@ public class Playfield extends Fragment
 	private Bus bus;
 	private Background background;
 	private Obstacles obstacles;
+	private CollisionDetector collisionDetector;
+	private ObstacleSpawner obstacleSpawner;
 	private int counter;
+	private int obstacleSpawnFreq;
+	private int signalUpdateFreq;
 	private final Random rand = new Random();
+	private final LinkedList<SignalType> eventQueue = new LinkedList<>();
+
+	private static final String TAG = "MyMessage";
 
 	private static final int BUTTON_LEFT = R.id.button_left;
 	private static Button buttonLeft;
@@ -56,6 +70,10 @@ public class Playfield extends Fragment
 		background = new Background(metrics);
 		bus = new Bus(metrics);
 		obstacles = new Obstacles(metrics);
+		collisionDetector = new CollisionDetector();
+		obstacleSpawner = new ObstacleSpawner(obstacles);
+		counter = 40;
+		obstacleSpawnFreq = 0;
 
 		container.addView(background.getView(getActivity()));
 		container.addView(obstacles.getView(getActivity()));
@@ -93,12 +111,44 @@ public class Playfield extends Fragment
 	}
 
 	/**
+	 * Public getter for the collisionDetector
+	 *
+	 * @return - instance of the collisionDetector
+	 */
+	public CollisionDetector getCollisionDetector () {return collisionDetector;}
+
+	/**
 	 * Public getter for bus.
 	 *
 	 * @return - instance of bus.
 	 */
 	public Bus getBus() {
 		return bus;
+	}
+
+	/**
+	 * Invokes the AsyncTask in the BussReader to check all the signals from the server.
+	 */
+	public void updateBussReader () {
+		if (signalUpdateFreq == 33) {
+			new BussReader().execute(eventQueue);
+			signalUpdateFreq = 0;
+		}
+		signalUpdateFreq++;
+	}
+
+	/**
+	 * Runs spawnObstacle in obstacleSpawner
+	 */
+	public void spawnNewObstacles(){
+		if (obstacleSpawnFreq == 160) {
+			obstacleSpawnFreq = 0;
+			if (!eventQueue.isEmpty()) {
+				obstacleSpawner.spawnObstacle(eventQueue.poll());
+			}
+			obstacleSpawner.spawnObstacle(SignalType.EMPTY);
+		}
+		obstacleSpawnFreq += 1;
 	}
 
 	/**
@@ -112,7 +162,7 @@ public class Playfield extends Fragment
 	 * Spawns a battery on a random lane so the bus can get more energy
 	 */
 	public void spawnBattery(){
-		if (counter == 200) {
+		if (counter == 160 ) {
 			int randomInt = rand.nextInt(5);
 			obstacles.spawnPower(randomInt + 1);
 			counter = 0;

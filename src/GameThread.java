@@ -8,7 +8,7 @@ import android.util.Log;
  * Main Game Thread for Project Hyperion. Currently initializes the playfield.
  *
  * @author 		Mattias Benngard
- * @version		1.0
+ * @version		1.1
  * @since		2015-09-30
  */
 
@@ -59,10 +59,17 @@ public class GameThread extends Thread
 				@Override
 				public void run() {
 					playfield.getBackground().backgroundMovement();
-					playfield.getBus().getPowerComponent().drainPower();
-					playfield.getBus().update();
 					playfield.getObstacles().obstaclesMovement();
 					playfield.spawnBattery();
+					playfield.getBus().update();
+					playfield.updateBussReader();
+					playfield.spawnNewObstacles();
+					if(!playfield.getBus().getPowerComponent().drainPower()){
+						quitGame();
+					}
+					if(playfield.getCollisionDetector().checkCollsion(playfield.getBus().getLightingBolts(), playfield.getBus(), playfield.getObstacles())){
+						quitGame();
+					}
 				}
 			});
 
