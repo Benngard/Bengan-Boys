@@ -17,12 +17,15 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -43,8 +46,12 @@ public class Playfield extends Fragment
 	private int counter;
 	private int obstacleSpawnFreq;
 	private int signalUpdateFreq;
+	private boolean paused;
 	private final Random rand = new Random();
 	private final LinkedList<SignalType> eventQueue = new LinkedList<>();
+
+	private List<Button> playButtons;
+	private List<Button> gameOverButtons;
 
 	private static final String TAG = "MyMessage";
 
@@ -57,6 +64,15 @@ public class Playfield extends Fragment
 	private final static int BUTTON_FIRE = R.id.button_fire;
 	private static Button buttonFire;
 
+	private final static  int BUTTON_NEW_GAME = R.id.buttonNewGame;
+	private static  Button buttonNewGame;
+
+	private final static  int BUTTON_QUIT = R.id.buttonQuit;
+	private static  Button buttonQuit;
+
+	private final static int TEXT_GAME_OVER = R.id.gameover;
+	private static TextView textGameOver;
+
 	@Override
 	public void onCreate (Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -67,36 +83,44 @@ public class Playfield extends Fragment
 
 		DisplayMetrics metrics = new DisplayMetrics();
 		this.getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
 		background = new Background(metrics);
 		bus = new Bus(metrics);
 		obstacles = new Obstacles(metrics);
+
 		collisionDetector = new CollisionDetector();
 		obstacleSpawner = new ObstacleSpawner(obstacles);
 		counter = 40;
 		obstacleSpawnFreq = 0;
 
+
+		//Add views to container
 		container.addView(background.getView(getActivity()));
 		container.addView(obstacles.getView(getActivity()));
 		container.addView(bus.getView(getActivity()));
 		container.addView(bus.getPowerComponent().getView(getActivity()));
 
 		final View view = inflater.inflate(R.layout.fragment_playfield, container, false);
+		playButtons = new ArrayList<>();
+		gameOverButtons = new ArrayList<>();
 
 		buttonLeft = (Button) view.findViewById(BUTTON_LEFT);
 		buttonLeft.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				left ();
+				left();
 			}
 		});
+		playButtons.add(buttonLeft);
 
 		buttonRight = (Button) view.findViewById(BUTTON_RIGHT);
 		buttonRight.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				right ();
+				right();
 			}
 		});
+		playButtons.add(buttonRight);
 
 		buttonFire = (Button) view.findViewById(BUTTON_FIRE);
 		buttonFire.setOnClickListener(new OnClickListener() {
@@ -105,8 +129,32 @@ public class Playfield extends Fragment
 				fire();
 			}
 		});
+		playButtons.add(buttonFire);
 
+		buttonNewGame = (Button) view.findViewById(BUTTON_NEW_GAME);
+		buttonNewGame.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				startNewGame();
+			}
+		});
+		buttonNewGame.setVisibility(View.GONE);
+		gameOverButtons.add(buttonNewGame);
 
+		buttonQuit = (Button) view.findViewById(BUTTON_QUIT);
+		buttonQuit.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				//Gör något
+			}
+		});
+		buttonQuit.setVisibility(View.GONE);
+		gameOverButtons.add(buttonQuit);
+
+		textGameOver = (TextView) view.findViewById(TEXT_GAME_OVER);
+		textGameOver.setVisibility(View.GONE);
+
+		paused = false;
 		return view;
 	}
 
@@ -217,7 +265,7 @@ public class Playfield extends Fragment
 			height = metrics.heightPixels;
 			width = metrics.widthPixels;
 			yPos -=height;
-			scrollSpeed = height/100.0f;
+			scrollSpeed = height/80.0f;
 		}
 
 		/**
@@ -236,7 +284,7 @@ public class Playfield extends Fragment
 		 */
 		public void backgroundMovement() {
 			if(yPos + scrollSpeed >= 0.0f) {
-				float tempPos = yPos + scrollSpeed;
+				float tempPos = yPos - scrollSpeed;
 				yPos = -(height + tempPos);
 			}else{
 				yPos += scrollSpeed;
@@ -294,12 +342,40 @@ public class Playfield extends Fragment
 
 	public Obstacles getObstacles() {return obstacles;}
 
-	public void reset() {
-		DisplayMetrics metrics = new DisplayMetrics();
-		this.getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
-		background = new Background(metrics);
-		bus = new Bus(metrics);
-		obstacles = new Obstacles(metrics);
+	public boolean isPaused() {
+		return paused;
+	}
 
+	/**
+	 * The game stops and the game over screen pops up.
+	 */
+	public void gameOver(){
+		paused = true;
+		for(Button button : playButtons) {
+			button.setVisibility(View.GONE);
+		}
+		for(Button button : gameOverButtons) {
+			button.setVisibility(View.VISIBLE);
+		}
+		textGameOver.setVisibility(View.VISIBLE);
+	}
+
+	/**
+	 * Resets the game, for another playthrough.
+	 */
+	public void startNewGame() {
+		bus.reset();
+		obstacles.reset();
+		eventQueue.clear();
+
+		for(Button button : gameOverButtons) {
+			button.setVisibility(View.GONE);
+		}
+		for(Button button : playButtons) {
+			button.setVisibility(View.VISIBLE);
+		}
+
+		textGameOver.setVisibility(View.GONE);
+		paused = false;
 	}
 }

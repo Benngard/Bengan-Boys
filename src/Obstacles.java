@@ -84,7 +84,7 @@ public class Obstacles {
 
         height = metrics.heightPixels;
         width = metrics.widthPixels;
-        obstacleMoveSpeed = height/100.0f;
+        obstacleMoveSpeed = height/80.0f;
 
 
         // Calculate where spawnposition is for each lane
@@ -380,4 +380,11 @@ public class Obstacles {
         }
     }
 
+    /**
+     * Reset all the components in this class to start position
+     */
+    public void reset() {
+        invulnerables.clear();
+        collectibles.clear();
+    }
 }

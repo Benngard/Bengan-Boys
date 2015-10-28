@@ -49,7 +49,6 @@ public class Bus
     private int width;
     private int lane;
     private double laneLength;
-    private double pixelLength;
     private double scrollSpeed;
 
     // Lane positions
@@ -142,32 +141,8 @@ public class Bus
      */
     public void spawnLightning() {
         if(powerComponent.firePower()){
-            switch(lane) {
-                case 1:
-                    lightningRect.set(laneOnePos, lightningRect.top, laneOneEndPos, lightningRect.bottom);
-                    lightingBolts.add(new LightingBolt( new Rect(lightningRect)) );
-                    break;
-
-                case 2:
-                    lightningRect.set(laneTwoPos, lightningRect.top, laneTwoEndPos, lightningRect.bottom);
-                    lightingBolts.add(new LightingBolt( new Rect(lightningRect)) );
-                    break;
-
-                case 3:
-                    lightningRect.set(laneThreePos, lightningRect.top, laneThreeEndPos, lightningRect.bottom);
-                    lightingBolts.add(new LightingBolt( new Rect(lightningRect)) );
-                    break;
-
-                case 4:
-                    lightningRect.set(laneFourPos, lightningRect.top, laneFourEndPos, lightningRect.bottom);
-                    lightingBolts.add(new LightingBolt( new Rect(lightningRect)) );
-                    break;
-
-                case 5:
-                    lightningRect.set(laneFivePos, lightningRect.top, laneFiveEndPos, lightningRect.bottom);
-                    lightingBolts.add(new LightingBolt( new Rect(lightningRect)) );
-                    break;
-            }
+            setRectToLane(lightningRect);
+            lightingBolts.add(new LightingBolt( new Rect(lightningRect)) );
         }
     }
 
@@ -176,8 +151,8 @@ public class Bus
      */
     public void moveLeft(){
         if(canMoveLeft()){
-            busRect.set((int) (busRect.left - laneLength), busRect.top, (int)(busRect.right - laneLength), busRect.bottom);
             lane -= 1;
+            setRectToLane(busRect);
         }
     }
 
@@ -186,8 +161,27 @@ public class Bus
      */
     public void moveRight(){
         if(canMoveRight()){
-            busRect.set((int) (busRect.left + laneLength), busRect.top, (int)(busRect.right + laneLength), busRect.bottom);
             lane += 1;
+            setRectToLane(busRect);
+        }
+    }
+
+    /**
+     * Reposition rect to the position of the lane which the bus is on.
+     * @param rect - The rect to reposition
+     */
+    private void setRectToLane(Rect rect) {
+        switch (lane) {
+            case 1: rect.set(laneOnePos, rect.top, laneOneEndPos, rect.bottom);
+                break;
+            case 2: rect.set(laneTwoPos, rect.top, laneTwoEndPos, rect.bottom);
+                break;
+            case 3: rect.set(laneThreePos, rect.top, laneThreeEndPos, rect.bottom);
+                break;
+            case 4: rect.set(laneFourPos, rect.top, laneFourEndPos, rect.bottom);
+                break;
+            case 5: rect.set(laneFivePos, rect.top, laneFiveEndPos, rect.bottom);
+                break;
         }
     }
 
@@ -239,7 +233,7 @@ public class Bus
             int newDrawablesHeight = (int) (drawableHeight*ratioMultiplier);
 
             // Placing busRect to right position
-            busRect = new Rect(laneThreePos,(int) ((height-laneLength) - newDrawablesHeight), laneThreeEndPos, (int)(height-laneLength));
+            busRect = new Rect(laneThreePos,(int) ((height-(laneLength*2)) - newDrawablesHeight), laneThreeEndPos, (int)(height-(laneLength*2)));
         }
 
         /**
@@ -257,7 +251,7 @@ public class Bus
             int newDrawablesHeight = (int) (drawableHeight*ratioMultiplier);
 
             // Placing lightningsRect to right position
-            lightningRect = new Rect(0,(int) ((height-laneLength*2) - newDrawablesHeight), 0, (int)(height-laneLength*2));
+            lightningRect = new Rect(0,(int) ((height-laneLength*3) - newDrawablesHeight), 0, (int)(height-laneLength*3));
         }
 
         /**
@@ -275,5 +269,15 @@ public class Bus
                 drawableLightning.draw(canvas);
             }
         }
+    }
+
+    /**
+     * Reset all the components in this class to start position
+     */
+    public void reset() {
+        lightingBolts.clear();
+        powerComponent.fullPower();
+        lane = 3;
+        setRectToLane(busRect);
     }
 }

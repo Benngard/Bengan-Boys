@@ -58,17 +58,19 @@ public class GameThread extends Thread
 			activity.runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
-					playfield.getBackground().backgroundMovement();
-					playfield.getObstacles().obstaclesMovement();
-					playfield.spawnBattery();
-					playfield.getBus().update();
-					playfield.updateBussReader();
-					playfield.spawnNewObstacles();
-					if(!playfield.getBus().getPowerComponent().drainPower()){
-						quitGame();
-					}
-					if(playfield.getCollisionDetector().checkCollsion(playfield.getBus().getLightingBolts(), playfield.getBus(), playfield.getObstacles())){
-						quitGame();
+					if( ! playfield.isPaused() ) {
+						playfield.getBackground().backgroundMovement();
+						playfield.getObstacles().obstaclesMovement();
+						playfield.spawnBattery();
+						playfield.getBus().update();
+						playfield.updateBussReader();
+						playfield.spawnNewObstacles();
+						if (!playfield.getBus().getPowerComponent().drainPower()) {
+							gameOver();
+						}
+						if (playfield.getCollisionDetector().checkCollsion(playfield.getBus().getLightingBolts(), playfield.getBus(), playfield.getObstacles())) {
+							gameOver();
+						}
 					}
 				}
 			});
@@ -82,13 +84,11 @@ public class GameThread extends Thread
 		}
 	}
 
-
 	/**
-	 * Resets the game, for another playthrough.
+	 * Pop up the game over screen
 	 */
-	private void replayGame () {
-		score = 0;
-		playfield.reset ();
+	private void gameOver() {
+		playfield.gameOver();
 	}
 
 	/**

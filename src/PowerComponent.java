@@ -58,6 +58,13 @@ public class PowerComponent
 		power = (power > POWER_MAX) ? POWER_MAX : power;
 		view.invalidate();
 	}
+
+	/**
+	 * Fills power up to max.
+	 */
+	public void fullPower() {
+		power = POWER_MAX;
+	}
 	
 	/**
 	 * Returns if the buss has enough power to fire a shot. If it has enough it will also consume the
