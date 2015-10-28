@@ -25,7 +25,7 @@ import java.util.Iterator;
  * Initializes all the logic for different obstacles, placement, speed and the graphics
  *
  * @author 		Daniel Edsinger
- * @version		0.3
+ * @version		0.4
  * @since		2015-10-14
  */
 public class Obstacles {

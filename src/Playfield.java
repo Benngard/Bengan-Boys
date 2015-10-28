@@ -32,7 +32,7 @@ import java.util.Random;
  * Playfield Fragment, initializes GUI for Playfield; Left- Right, Fire Button.
  *
  * @author 		Mattias Benngard, Daniel Edsinger, Ola Andersson
- * @version		1.3
+ * @version		1.4
  * @since		2015-10-06
  */
 
@@ -145,7 +145,7 @@ public class Playfield extends Fragment
 		buttonQuit.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				//Gör något
+				quitGame();
 			}
 		});
 		buttonQuit.setVisibility(View.GONE);
@@ -153,6 +153,7 @@ public class Playfield extends Fragment
 
 		textGameOver = (TextView) view.findViewById(TEXT_GAME_OVER);
 		textGameOver.setVisibility(View.GONE);
+
 
 		paused = false;
 		return view;
@@ -377,5 +378,13 @@ public class Playfield extends Fragment
 
 		textGameOver.setVisibility(View.GONE);
 		paused = false;
+	}
+
+	/**
+	 * Finishes the activity and quits the application.
+	 */
+	public void quitGame() {
+		getActivity().finish();
+		System.exit(0);
 	}
 }

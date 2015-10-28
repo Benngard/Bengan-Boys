@@ -8,7 +8,7 @@ import android.util.Log;
  * Main Game Thread for Project Hyperion. Currently initializes the playfield.
  *
  * @author 		Mattias Benngard
- * @version		1.1
+ * @version		1.2
  * @since		2015-09-30
  */
 
@@ -66,10 +66,10 @@ public class GameThread extends Thread
 						playfield.updateBussReader();
 						playfield.spawnNewObstacles();
 						if (!playfield.getBus().getPowerComponent().drainPower()) {
-							gameOver();
+							playfield.gameOver();
 						}
 						if (playfield.getCollisionDetector().checkCollsion(playfield.getBus().getLightingBolts(), playfield.getBus(), playfield.getObstacles())) {
-							gameOver();
+							playfield.gameOver();
 						}
 					}
 				}
@@ -84,18 +84,4 @@ public class GameThread extends Thread
 		}
 	}
 
-	/**
-	 * Pop up the game over screen
-	 */
-	private void gameOver() {
-		playfield.gameOver();
-	}
-
-	/**
-	 * Finishes the activity and quits the application.
-	 */
-	private void quitGame () {
-		activity.finish();
-		System.exit(0);
-	}
 }
