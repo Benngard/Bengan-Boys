@@ -1,26 +1,26 @@
 package com.example.hyperion.Obstacle;
 
-
 import android.util.Log;
 
 import com.example.hyperion.Signal.SignalType;
 
 /**
- * @author Anton Andrén
- * @version 2.0
- * @since 2015-10-15
- *
  * ObstacleSpawner is responsible for spawning all the objects spawning on the top of the screen.
+ *
+ * @author  Anton Andrén
+ * @version 2.0
+ * @since   2015-10-15
  */
 
-public class ObstacleSpawner {
-
-    Obstacles obstacles;
-    private static final String TAG = "MyMessage";
+public class ObstacleSpawner
+{
+    private final Obstacles obstacles;
+    private static final String TAG = "ObstacleSpawner";
 
     /**
      * Constructor for the ObstacleSpawner, saves a reference of Onstacles and bussReader
-     * @param obstacles
+     * 
+     * @param obstacles - container for obstacles
      */
     public ObstacleSpawner (Obstacles obstacles) {
         this.obstacles = obstacles;
@@ -28,6 +28,8 @@ public class ObstacleSpawner {
 
     /**
      * Spawns objects on the top of the screen based on the eventQueue in bussReader and also spawns energy refills.
+     *
+     * @param signalType - which signal to execute
      */
     public void spawnObstacle (SignalType signalType) {
         Log.i(TAG, "ObstacleSpawner current signal: " + signalType.toString());
@@ -44,8 +46,6 @@ public class ObstacleSpawner {
                 obstacles.spawnRockRight();
                 break;
             case EMPTY:
-                break;
-            default:
                 break;
         }
     }

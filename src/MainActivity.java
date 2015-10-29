@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.view.Window;
 import android.view.WindowManager;
+
 import com.example.hyperion.Core.*;
 
 /**
@@ -16,7 +17,7 @@ import com.example.hyperion.Core.*;
 
 public class MainActivity extends Activity
 {
-	@Override
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         

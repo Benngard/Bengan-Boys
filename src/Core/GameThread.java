@@ -60,18 +60,17 @@ public class GameThread extends Thread
 		ft.commit();
 
 		while (running) {
-
 			activity.runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
-					if( ! playfield.isPaused() ) {
+					if( !playfield.isPaused() ) {
 						playfield.getBackground().backgroundMovement();
 						playfield.getObstacles().obstaclesMovement();
 						playfield.spawnBattery();
 						playfield.getBus().update();
 						playfield.updateBussReader();
 						playfield.spawnNewObstacles();
-						if (!playfield.getBus().getPowerComponent().drainPower()) {
+						if ( !playfield.getBus().getPowerComponent().drainPower()) {
 							playfield.gameOver();
 						}
 						if (playfield.getCollisionDetector().checkCollsion(playfield.getBus().getLightingBolts(), playfield.getBus(), playfield.getObstacles())) {
@@ -89,5 +88,4 @@ public class GameThread extends Thread
 			}
 		}
 	}
-
 }

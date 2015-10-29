@@ -1,41 +1,27 @@
 package com.example.hyperion.Obstacle;
 
-
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 
-
-import com.example.hyprion.R;
+import com.example.hyperion.ObstacleObjects.LaneObject;
 
 /**
  * Keeps the Rect for the lightning-attack and moves it up the screen
  *
  * @author 		Ola Andersson, Daniel Edsinger
- * @version		2.0
+ * @version		2.1
  * @since		2015-09-29
  */
-public class LightingBolt {
 
-    private Rect rect;
-
-    /**
-     *Initializes a lightingbolt animation.
-     */
-
-    public LightingBolt(Rect rect){
-        this.rect = rect;
-    }
-
-    public void moveObstacle(double scrollSpeed){
-        rect.set(rect.left, (int) (rect.top - scrollSpeed), rect.right, (int) (rect.bottom - scrollSpeed));
-    }
+public class LightingBolt extends LaneObject {
 
     /**
-     * Public method to get a Rect.
+     *  asd
      *
-     * @return - a rect for this lightning.
+     *  @param rect
      */
-    public Rect getRect(){
-        return rect;
+    public LightingBolt(Rect rect, Drawable image) {
+        super(rect, image);
     }
 
 }
