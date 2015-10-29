@@ -1,0 +1,112 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity">
+
+
+    <LinearLayout
+        android:id="@+id/LinearLayout02"
+        android:layout_height="match_parent"
+        android:layout_width="fill_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignWithParentIfMissing="true">
+
+
+        <Button
+            android:id="@+id/button_left"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:background="@android:color/transparent">
+
+        </Button>
+
+
+        <Button
+            android:id="@+id/button_right"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@android:color/transparent">
+
+        </Button>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true">
+
+        <TextView
+            android:id="@+id/gameover"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/game_over"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="50sp"
+            android:layout_marginTop="80dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New Game"
+            android:id="@+id/buttonNewGame"
+            android:layout_marginTop="41dp"
+            android:singleLine="true"
+            android:layout_below="@+id/gameover"
+            android:layout_alignLeft="@+id/gameover"
+            android:layout_alignStart="@+id/gameover"
+            android:layout_alignRight="@+id/gameover"
+            android:layout_alignEnd="@+id/gameover" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Quit"
+            android:id="@+id/buttonQuit"
+            android:layout_marginTop="55dp"
+            android:layout_below="@+id/buttonNewGame"
+            android:layout_alignLeft="@+id/buttonNewGame"
+            android:layout_alignStart="@+id/buttonNewGame"
+            android:layout_alignRight="@+id/buttonNewGame"
+            android:layout_alignEnd="@+id/buttonNewGame" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/button_fire"
+            android:layout_width="48dp"
+            android:layout_height="wrap_content"
+            android:text="FIRE"
+            android:layout_gravity="bottom"
+            android:layout_column="9"
+            android:layout_row="0"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="130dp"
+            android:layout_marginEnd="130dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="130dp"
+            android:layout_marginStart="130dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="510dp"
+            android:layout_alignParentTop="true" />
+
+    </RelativeLayout>
+
+</RelativeLayout>
+<!-- From: file:/C:/Users/Anton/Documents/Hyperion/Hyperion/Hyperion1y/Hyperion/app/src/main/res/layout/fragment_playfield.xml -->
