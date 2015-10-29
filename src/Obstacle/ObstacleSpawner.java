@@ -1,11 +1,13 @@
-package com.example.hyperion;
+package com.example.hyperion.Obstacle;
 
 
 import android.util.Log;
 
+import com.example.hyperion.Signal.SignalType;
+
 /**
  * @author Anton Andrén
- * @version 1.0
+ * @version 2.0
  * @since 2015-10-15
  *
  * ObstacleSpawner is responsible for spawning all the objects spawning on the top of the screen.

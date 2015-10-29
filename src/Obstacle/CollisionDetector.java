@@ -1,10 +1,12 @@
-package com.example.hyperion;
+package com.example.hyperion.Obstacle;
 
 import android.graphics.Rect;
 
+import com.example.hyperion.Bus.*;
 import com.example.hyperion.ObstacleObjects.Collectible;
 import com.example.hyperion.ObstacleObjects.Invulnerable;
 import com.example.hyperion.ObstacleObjects.Rocks;
+import com.example.hyperion.Obstacle.*;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -13,7 +15,7 @@ import java.util.List;
 /**
  * @author Anton Andrén
  * @since 2015-10-10
- * @version  1.0
+ * @version  2.0
  *
  * Class for detecting and handling collisions between objects in Playfield.
  */

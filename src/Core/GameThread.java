@@ -1,14 +1,20 @@
-package com.example.hyperion;
+package com.example.hyperion.Core;
 
 import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.util.Log;
 
+import com.example.hyperion.*;
+import com.example.hyperion.Obstacle.*;
+import com.example.hyperion.Core.*;
+import com.example.hyperion.Bus.*;
+import com.example.hyperion.Signal.*;
+
 /**
  * Main Game Thread for Project Hyperion. Currently initializes the playfield.
  *
  * @author 		Mattias Benngard
- * @version		1.2
+ * @version		2.0
  * @since		2015-09-30
  */
 

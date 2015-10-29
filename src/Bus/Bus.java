@@ -1,4 +1,4 @@
-package com.example.hyperion;
+package com.example.hyperion.Bus;
 
 import android.app.Activity;
 import android.content.Context;
@@ -9,6 +9,8 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 
+import com.example.hyperion.Obstacle.LightingBolt;
+import com.example.hyperion.Bus.PowerComponent;
 import com.example.hyprion.R;
 
 import java.util.ArrayList;
@@ -18,7 +20,7 @@ import java.util.Iterator;
  * Initializes a bus on the background.
  *
  * @author 		Ola Andersson, Daniel Edsinger
- * @version		0.4
+ * @version		2.0
  * @since		2015-10-13
  */
 

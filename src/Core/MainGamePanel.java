@@ -1,4 +1,4 @@
-package com.example.hyperion;
+package com.example.hyperion.Core;
 
 import android.app.Activity;
 import android.content.Context;
@@ -9,7 +9,7 @@ import android.view.SurfaceView;
  * Main Game View for Project Hyperion. Initializes game thread.
  * 
  * @author 		Mattias Benngard
- * @version		1.0
+ * @version		2.0
  * @since		2015-09-30
  */
 

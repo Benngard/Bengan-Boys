@@ -1,4 +1,4 @@
-package com.example.hyperion;
+package com.example.hyperion.Obstacle;
 
 import android.app.Activity;
 import android.content.Context;
@@ -25,7 +25,7 @@ import java.util.Iterator;
  * Initializes all the logic for different obstacles, placement, speed and the graphics
  *
  * @author 		Daniel Edsinger
- * @version		0.4
+ * @version		2.0
  * @since		2015-10-14
  */
 public class Obstacles {

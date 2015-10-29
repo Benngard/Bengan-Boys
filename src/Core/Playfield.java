@@ -1,6 +1,10 @@
-package com.example.hyperion;
+package com.example.hyperion.Core;
 
 import com.example.hyprion.R;
+import com.example.hyperion.Bus.*;
+import com.example.hyperion.Obstacle.*;
+import com.example.hyperion.Signal.*;
+
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -32,7 +36,7 @@ import java.util.Random;
  * Playfield Fragment, initializes GUI for Playfield; Left- Right, Fire Button.
  *
  * @author 		Mattias Benngard, Daniel Edsinger, Ola Andersson
- * @version		1.4
+ * @version		2.0
  * @since		2015-10-06
  */
 
@@ -188,6 +192,7 @@ public class Playfield extends Fragment
 
 	/**
 	 * Runs spawnObstacle in obstacleSpawner
+	 * Currently guarded with a timer since current obstacle design can block the entire road otherwise.
 	 */
 	public void spawnNewObstacles(){
 		if (obstacleSpawnFreq == 160) {

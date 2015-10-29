@@ -1,7 +1,9 @@
-package com.example.hyperion;
+package com.example.hyperion.Signal;
 
 import android.os.AsyncTask;
 import android.util.Log;
+
+import com.example.hyperion.Signal.SignalType;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,7 +20,7 @@ import java.util.List;
 
 /**
  * @author Anton Andrén
- * @version 1.0
+ * @version 2.0
  * @since 2015-09-27
  *
  * BussReader
@@ -225,10 +227,6 @@ public class BussReader extends AsyncTask<LinkedList, Void, Void>
 				stopFlag = false;
 			}
 		}
-	}
-
-	public SignalType getEvent () {
-		return eventQueue.isEmpty() ? SignalType.EMPTY : eventQueue.poll();
 	}
 
 }

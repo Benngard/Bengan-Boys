@@ -1,4 +1,4 @@
-package com.example.hyperion;
+package com.example.hyperion.Bus;
 
 import android.app.Activity;
 import android.content.Context;
@@ -13,7 +13,7 @@ import android.view.View;
  * Internal class PowerComponentView to update PowerBar
  * 
  * @author 		Mattias Benngard
- * @version		1.0
+ * @version		2.0
  * @since		2015-09-30
  */
 

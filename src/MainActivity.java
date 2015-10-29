@@ -4,12 +4,13 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.view.Window;
 import android.view.WindowManager;
+import com.example.hyperion.Core.*;
 
 /**
  * Main Activity for Project Hyperion. Sets content view to MainGamePanel.
  * 
  * @author 		Mattias Benngard
- * @version		1.0
+ * @version		2.0
  * @since		2015-09-30
  */
 

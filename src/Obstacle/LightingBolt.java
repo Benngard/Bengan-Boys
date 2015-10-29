@@ -1,4 +1,4 @@
-package com.example.hyperion;
+package com.example.hyperion.Obstacle;
 
 
 import android.graphics.Rect;
@@ -10,7 +10,7 @@ import com.example.hyprion.R;
  * Keeps the Rect for the lightning-attack and moves it up the screen
  *
  * @author 		Ola Andersson, Daniel Edsinger
- * @version		0.4
+ * @version		2.0
  * @since		2015-09-29
  */
 public class LightingBolt {
