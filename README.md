@@ -19,3 +19,4 @@ Members:
 graphics for for the game.
 - All javadoc can be found in the "Javadoc" folder.
 - The complete runnable apk file is named "hyperion-release.apk"
+- A functional Android Studio project can be used to be imorted into Android Studio and is in the folder "Hyperion".
