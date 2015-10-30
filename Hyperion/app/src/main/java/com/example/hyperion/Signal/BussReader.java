@@ -3,29 +3,21 @@ package com.example.hyperion.Signal;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.example.hyperion.Signal.SignalType;
-
 import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.LinkedList;
-import java.util.List;
-
 
 /**
- * @author Anton Andrén
- * @version 2.0
- * @since 2015-09-27
+ * BussReader is responsible for connecting to the buss, reading the busses signals and updating the eventQueue based on the signals
  *
- * BussReader
- * BussReader is responsible for connecting to the buss, reading the busses signals
- * and updating the eventQueue based on the signals
+ * @author 	Anton Andrén
+ * @version 2.0
+ * @since 	2015-09-27
  */
 
 public class BussReader extends AsyncTask<LinkedList, Void, Void>
@@ -35,15 +27,8 @@ public class BussReader extends AsyncTask<LinkedList, Void, Void>
 	private boolean indicatorFlag = false;
 	private LinkedList<SignalType> eventQueue = new LinkedList<>();
 	private String key = "Z3JwNTU6aGROZzhUaU5VbA==";
-	private static final String TAG = "MyMessage";
+	private static final String TAG = "BussReader";
 
-
-	/**
-	 * doInBackground is an AsyncTask invoked from playfield that runs the methods for connecting to the buss
-	 * and checking signals
-	 * @param params - type: LinkedList<SignalType> - the reference is stored and updated as a way of communicating information back to payfield.
-	 * @return - null
-	 */
 	@Override
 	protected Void doInBackground(LinkedList... params) {
 		this.eventQueue = params[0];
@@ -52,15 +37,16 @@ public class BussReader extends AsyncTask<LinkedList, Void, Void>
 			checkDoorState();
 			checkIndicatorState();
 		} catch (IOException e) {
-			Log.i(TAG, "Exception thrown at check...: "+  e.toString());
+			Log.i(TAG, "IOException thrown at check...: "+  e.toString());
 		} catch (JSONException e) {
-			Log.i(TAG, "Exception thrown at check...: " + e.toString());
+			Log.i(TAG, "JSONException thrown at check...: " + e.toString());
 		}
 		return null;
 	}
 	
 	/**
 	 * Opens a connection the the door sensor then reads and updates the eventQueue accordingly before closing the connection.
+	 *
 	 * @throws IOException
 	 * @throws JSONException
 	 */
@@ -119,6 +105,7 @@ public class BussReader extends AsyncTask<LinkedList, Void, Void>
 
 	/**
 	 * Opens a connection to the indecator sensor and updates the eventQueue accordingly before closing the connection.
+	 *
 	 * @throws IOException
 	 * @throws JSONException
 	 */
@@ -174,6 +161,7 @@ public class BussReader extends AsyncTask<LinkedList, Void, Void>
 	
 	/**
 	 * Opens a connection to the stop sensor then reads and updates the eventQueue accordingly before closing the connection
+	 *
 	 * @throws IOException
 	 * @throws JSONException
 	 */
@@ -228,5 +216,4 @@ public class BussReader extends AsyncTask<LinkedList, Void, Void>
 			}
 		}
 	}
-
 }

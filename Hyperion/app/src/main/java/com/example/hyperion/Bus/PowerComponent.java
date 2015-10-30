@@ -19,21 +19,15 @@ import android.view.View;
 
 public class PowerComponent
 {	
-	/**
-	 * View Holder
-	 */
+	// View Holder
 	private PowerComponentView view;
 	
-	/**
-	 * Power Modifiers
-	 */
+	// Power Modifiers
 	private static final int POWER_GLOBE_VALUE 		= 25;
 	private static final int POWER_FIRE_COST 		= 5;
 	private static final double POWER_DRAIN 		= 0.1f;
 	
-	/**
-	 * Power Value
-	 */
+	// Power Value
 	private static final int POWER_MAX 				= 100;
 	private static double power 					= POWER_MAX;
 

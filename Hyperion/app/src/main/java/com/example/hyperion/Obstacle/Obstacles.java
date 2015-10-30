@@ -6,15 +6,11 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 
-import com.example.hyperion.ObstacleObjects.Invulnerable;
-import com.example.hyperion.ObstacleObjects.FenceLeft;
-import com.example.hyperion.ObstacleObjects.FenceRight;
-import com.example.hyperion.ObstacleObjects.Rocks;
+import com.example.hyperion.ObstacleObjects.CollectibleObject;
+import com.example.hyperion.ObstacleObjects.InvulnerableObject;
 
-import com.example.hyperion.ObstacleObjects.Collectible;
 import com.example.hyperion.ObstacleObjects.Power;
 import com.example.hyprion.R;
 
@@ -25,14 +21,13 @@ import java.util.Iterator;
  * Initializes all the logic for different obstacles, placement, speed and the graphics
  *
  * @author 		Daniel Edsinger
- * @version		2.0
+ * @version		2.1
  * @since		2015-10-14
  */
+ 
 public class Obstacles {
 
-    /**
-     * View holder
-     */
+    // View Holder
     private View view;
 
     /**
@@ -47,64 +42,35 @@ public class Obstacles {
     private Rect powerRect;
 
     /**
+     * Drawables for every obstacle.
+     */
+    Drawable drawableRocks;
+    Drawable drawableFenceLeft;
+    Drawable drawableFenceRight;
+    Drawable drawablePower;
+
+    /**
      * List of invulnerable objects
      */
-    private ArrayList<Invulnerable> invulnerables;
-    private ArrayList<Collectible> collectibles;
+    private ArrayList<InvulnerableObject> invulnerables = new ArrayList<>();
+    private ArrayList<CollectibleObject> collectibles = new ArrayList<>();
 
     private int height; // Screen height in pixels
     private int width;  // Screen width in pixels
-    private float obstacleMoveSpeed;
-
-    /**
-     * Position for each lane on screen. Used for spawning obstacles.
-     */
-    private int laneOnePos;
-    private int laneOneEndPos;
-    private int laneTwoPos;
-    private int laneTwoEndPos;
-    private int laneThreePos;
-    private int laneThreeEndPos;
-    private int laneFourPos;
-    private int laneFourEndPos;
-    private int laneFivePos;
-    private int laneFiveEndPos;
-
-    private static final String TAG = "MyMessage";
+    private int obstacleMoveSpeed;
+    private ArrayList<LanePosition> lanePositions;
 
     /**
      * Get the resolution of the screen and initialize the scrollspeed
      *
      * @param metrics - resolution of screen
      */
-    public Obstacles (DisplayMetrics metrics) {
-
-        invulnerables = new ArrayList<>();
-        collectibles = new ArrayList<>();
+    public Obstacles (DisplayMetrics metrics, ArrayList<LanePosition> lanePositions) {
+        this.lanePositions = lanePositions;
 
         height = metrics.heightPixels;
         width = metrics.widthPixels;
-        obstacleMoveSpeed = height/80.0f;
-
-
-        // Calculate where spawnposition is for each lane
-        double roadRatio = 28.0f/ 320.0f;
-        double laneLength = roadRatio * height;
-
-        laneOnePos = (int) ((width/2) - (2.5*laneLength) + (laneLength/28));
-        laneOneEndPos = (int) ((width/2) - (1.5*laneLength) - (laneLength/28));
-
-        laneTwoPos = (int) ((width/2) - (1.5*laneLength) + (laneLength/28));
-        laneTwoEndPos = (int) ((width/2) - (0.5*laneLength) - (laneLength/28));
-
-        laneThreePos = (int) ((width/2) - (0.5*laneLength) + (laneLength/28));
-        laneThreeEndPos = (int) ((width/2) + (0.5*laneLength) - (laneLength/28));
-
-        laneFourPos = (int) ((width/2) + (0.5*laneLength) + (laneLength/28));
-        laneFourEndPos = (int) ((width/2) + (1.5*laneLength) - (laneLength/28));
-
-        laneFivePos = (int) ((width/2) + (1.5*laneLength) + (laneLength/28));
-        laneFiveEndPos = (int) ((width/2) + (2.5*laneLength) - (laneLength/28));
+        obstacleMoveSpeed = (int) (height/80.0f);
     }
 
     /**
@@ -121,59 +87,49 @@ public class Obstacles {
     }
 
     /**
-     * Public getter for list of Invulnerable on screen
+     * Public getter for list of InvulnerableObjects on screen
      *
      * @return - the list of invulnerable
      */
-    public ArrayList<Invulnerable> getInvulnerables(){
+    public ArrayList<InvulnerableObject> getInvulnerables(){
         return invulnerables;
     }
 
     /**
-     * Public getter for list of Collectibles on screen
+     * Public getter for list of CollectiblesObjects on screen
      *
      * @return - the list of collectibles
      */
-    public ArrayList<Collectible> getCollectibles(){
+    public ArrayList<CollectibleObject> getCollectibles(){
         return collectibles;
     }
-
-    /**
-     * Functions to spawn obstacles-----------------------------------------------------------------
-     *
-     *----------------------------------------------------------------------------------------------
-     */
 
     /**
      * Spawn a rock on the left side of the road.
      */
     public void spawnRockLeft() {
-        invulnerables.add( new Rocks(new Rect(rocksRectL)) );
-        Log.i(TAG, "Spawning rock");
+        invulnerables.add(new InvulnerableObject(new Rect(rocksRectL), drawableRocks));
     }
 
     /**
      * Spawn a rock one the right side of the road.
      */
     public void spawnRockRight() {
-        invulnerables.add( new Rocks(new Rect(rocksRectR)) );
-        Log.i(TAG, "Spawning rock");
+        invulnerables.add(new InvulnerableObject(new Rect(rocksRectR), drawableRocks));
     }
 
     /**
      * Spawn a fence on the left side of the road.
      */
     public void spawnFenceLeft() {
-        invulnerables.add( new FenceLeft(new Rect(fenceRectL)) );
-        Log.i(TAG, "Spawning fence");
+        invulnerables.add(new InvulnerableObject(new Rect(fenceRectL), drawableFenceLeft));
     }
 
     /**
      * Spawn a fence on the right size of the road.
      */
     public void spawnFenceRight() {
-        invulnerables.add( new FenceRight(new Rect(fenceRectR)) );
-        Log.i(TAG, "Spawning fence");
+        invulnerables.add(new InvulnerableObject(new Rect(fenceRectR), drawableFenceRight));
     }
 
     /**
@@ -182,13 +138,11 @@ public class Obstacles {
      * @param lane - the lane to spawn power
      */
     public void spawnPower(int lane) {
-
-        if(! (lane < 1 || lane > 5) ) {
+        if (lane >= 1 && lane <= 5 ) {
             Rect tmp = new Rect(powerRect);
             spawnOnLane(lane, tmp);
 
-            collectibles.add(new Power((tmp)));
-            Log.i(TAG, "Spawning power");
+            collectibles.add(new Power(tmp, drawablePower));
         }
     }
 
@@ -199,30 +153,8 @@ public class Obstacles {
      * @param rect - mutate to set this Rect's bounds to follow a specific lane
      */
     private void spawnOnLane(int lane, Rect rect) {
-        switch(lane) {
-            case 1: rect.set(laneOnePos, rect.top, laneOneEndPos, 0);
-                    break;
-
-            case 2: rect.set(laneTwoPos, rect.top, laneTwoEndPos, 0);
-                    break;
-
-            case 3: rect.set(laneThreePos, rect.top, laneThreeEndPos, 0);
-                    break;
-
-            case 4: rect.set(laneFourPos, rect.top, laneFourEndPos, 0);
-                    break;
-
-            case 5: rect.set(laneFivePos, rect.top, laneFiveEndPos, 0);
-                    break;
-        }
+        rect.set(lanePositions.get(lane-1).getStart(), rect.top, lanePositions.get(lane-1).getEnd(), 0);
     }
-
-    /**
-     *----------------------------------------------------------------------------------------------
-     *
-     * End of spawn functions-----------------------------------------------------------------------
-     */
-
 
     /**
      * Move all obstacles down the road towards the player. Removes obstacles if not on screen anymore.
@@ -231,28 +163,34 @@ public class Obstacles {
         //Iterator for invulnerable
         for (Iterator iterator = invulnerables.iterator(); iterator.hasNext();)
         {
-            Invulnerable obstacle = (Invulnerable) iterator.next();
+            InvulnerableObject obstacle = (InvulnerableObject) iterator.next();
             obstacle.moveObstacle(obstacleMoveSpeed);
 
             if(obstacle.getRect().top > height) {
                 iterator.remove();
-                Log.i(TAG, "Removed invulnerable. Invulnerables left in array: " + invulnerables.size());
             }
         }
 
         //Iterator for collectibles
         for (Iterator iterator = collectibles.iterator(); iterator.hasNext();)
         {
-            Collectible obstacle = (Collectible) iterator.next();
+            CollectibleObject obstacle = (CollectibleObject) iterator.next();
             obstacle.moveObstacle(obstacleMoveSpeed);
 
             if(obstacle.getRect().top > height) {
                 iterator.remove();
-                Log.i(TAG, "Removed collectible. Collectibles left in array: " + collectibles.size());
             }
         }
 
         view.invalidate();
+    }
+    
+    /**
+     * Reset all the components in this class to start position
+     */
+    public void reset() {
+        invulnerables.clear();
+        collectibles.clear();
     }
 
     /**
@@ -262,17 +200,8 @@ public class Obstacles {
      * @version		0.3
      * @since		2015-10-13
      */
-    private class ObstaclesView extends View {
-
-        /**
-         * Drawables for every obstacle.
-         */
-        Drawable drawableRocks;
-        Drawable drawableFenceLeft;
-        Drawable drawableFenceRight;
-        Drawable drawablePower;
-        //Add moore
-
+    private class ObstaclesView extends View
+    {
         /**
          * Initializes a view for the obstacles.
          *
@@ -304,8 +233,8 @@ public class Obstacles {
             int newDrawablesWidth = (int) (drawableWidth*ratioMultiplier);
 
             // Placing rocksRect to right position
-            rocksRectL = new Rect( laneOnePos, - newDrawablesHeight, laneOnePos + newDrawablesWidth, 0);
-            rocksRectR = new Rect( laneTwoPos, - newDrawablesHeight, laneTwoPos + newDrawablesWidth, 0);
+            rocksRectL = new Rect( lanePositions.get(0).getStart(), - newDrawablesHeight, lanePositions.get(0).getStart() + newDrawablesWidth, 0);
+            rocksRectR = new Rect( lanePositions.get(1).getStart(), - newDrawablesHeight, lanePositions.get(1).getStart() + newDrawablesWidth, 0);
         }
 
         /**
@@ -327,8 +256,8 @@ public class Obstacles {
             int newDrawablesWidth = (int) (drawableWidth*ratioMultiplier);
 
             // Placing rocksRect to right position
-            fenceRectL = new Rect( laneOneEndPos - newDrawablesWidth, - newDrawablesHeight, laneOneEndPos, 0);
-            fenceRectR = new Rect( laneFivePos, - newDrawablesHeight, laneFivePos + newDrawablesWidth, 0);
+            fenceRectL = new Rect( lanePositions.get(0).getEnd() - newDrawablesWidth, - newDrawablesHeight, lanePositions.get(0).getEnd(), 0);
+            fenceRectR = new Rect( lanePositions.get(4).getStart(), - newDrawablesHeight, lanePositions.get(4).getStart() + newDrawablesWidth, 0);
         }
 
         /**
@@ -339,8 +268,7 @@ public class Obstacles {
             drawablePower = getResources().getDrawable(R.drawable.power);
 
             float drawableHeight = drawableRocks.getIntrinsicHeight();
-            float drawableWidth = drawableRocks.getIntrinsicWidth();
-            double expectedRatio = 24.0f/ 320.0f;
+            double expectedRatio = 22.0f/ 320.0f;
             double realRatio = drawableHeight / height;
             double ratioMultiplier = expectedRatio/realRatio;
 
@@ -355,36 +283,18 @@ public class Obstacles {
         protected  void onDraw(Canvas canvas) {
             super.onDraw(canvas);
             // Draw all the invulnerable objects
-            for(Invulnerable obstacle : invulnerables){
-                if(obstacle instanceof Rocks) {
-                    drawableRocks.setBounds(obstacle.getRect());
-                    drawableRocks.draw(canvas);
+            for(InvulnerableObject obstacle : invulnerables){
 
-                }else if(obstacle instanceof FenceLeft){
-                    drawableFenceLeft.setBounds(obstacle.getRect());
-                    drawableFenceLeft.draw(canvas);
+                obstacle.getDrawable().setBounds(obstacle.getRect());
+                obstacle.getDrawable().draw(canvas);
 
-                }else if(obstacle instanceof FenceRight) {
-                    drawableFenceRight.setBounds(obstacle.getRect());
-                    drawableFenceRight.draw(canvas);
-
-                }
             }
             // Draw all the collectibles objects
-            for(Collectible obstacle : collectibles) {
-                if(obstacle instanceof Power) {
-                    drawablePower.setBounds(obstacle.getRect());
-                    drawablePower.draw(canvas);
-                }
+            for(CollectibleObject obstacle : collectibles) {
+
+                obstacle.getDrawable().setBounds(obstacle.getRect());
+                obstacle.getDrawable().draw(canvas);
             }
         }
-    }
-
-    /**
-     * Reset all the components in this class to start position
-     */
-    public void reset() {
-        invulnerables.clear();
-        collectibles.clear();
     }
 }

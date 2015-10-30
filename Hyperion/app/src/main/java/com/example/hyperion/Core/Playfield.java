@@ -5,7 +5,6 @@ import com.example.hyperion.Bus.*;
 import com.example.hyperion.Obstacle.*;
 import com.example.hyperion.Signal.*;
 
-
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
@@ -15,7 +14,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -23,11 +21,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import org.json.JSONException;
-
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -36,12 +30,14 @@ import java.util.Random;
  * Playfield Fragment, initializes GUI for Playfield; Left- Right, Fire Button.
  *
  * @author 		Mattias Benngard, Daniel Edsinger, Ola Andersson
- * @version		2.0
+ * @version		2.1
  * @since		2015-10-06
  */
 
 public class Playfield extends Fragment
 {
+	private static final int LANES = 5;
+
 	private Bus bus;
 	private Background background;
 	private Obstacles obstacles;
@@ -53,11 +49,10 @@ public class Playfield extends Fragment
 	private boolean paused;
 	private final Random rand = new Random();
 	private final LinkedList<SignalType> eventQueue = new LinkedList<>();
+	private final ArrayList<LanePosition> lanePositions = new ArrayList<>(5);
 
 	private List<Button> playButtons;
 	private List<Button> gameOverButtons;
-
-	private static final String TAG = "MyMessage";
 
 	private static final int BUTTON_LEFT = R.id.button_left;
 	private static Button buttonLeft;
@@ -88,15 +83,27 @@ public class Playfield extends Fragment
 		DisplayMetrics metrics = new DisplayMetrics();
 		this.getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
 
+		// Calculate where the spawnposition for each lane is.
+		int height = metrics.heightPixels;
+		int width = metrics.widthPixels;
+		double roadRatio = 28.0f/ 320.0f;
+		double laneLength = roadRatio * height;
+		double pixelLength = (laneLength/28);
+
+		for (int i = 0; i < LANES; i++) {
+			int laneStartPos = (int) ((width/2) - ((2.5 - i)*laneLength) + (laneLength/28));
+			int laneEndPos = (int) ((width/2) - ((1.5 - i)*laneLength) - (laneLength/28));
+			lanePositions.add(i, new LanePosition(laneStartPos, laneEndPos));
+		}
+
 		background = new Background(metrics);
-		bus = new Bus(metrics);
-		obstacles = new Obstacles(metrics);
+		bus = new Bus(metrics, lanePositions);
+		obstacles = new Obstacles(metrics, lanePositions);
 
 		collisionDetector = new CollisionDetector();
 		obstacleSpawner = new ObstacleSpawner(obstacles);
 		counter = 40;
 		obstacleSpawnFreq = 0;
-
 
 		//Add views to container
 		container.addView(background.getView(getActivity()));
@@ -246,8 +253,8 @@ public class Playfield extends Fragment
 	 * @version		0.3
 	 * @since		2015-10-06
 	 */
-	public class Background {
-
+	public class Background
+	{
 		/**
 		 * View holder
 		 */

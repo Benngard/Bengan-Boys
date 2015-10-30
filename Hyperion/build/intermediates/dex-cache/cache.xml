@@ -2,25 +2,25 @@
 <items version="2" >
 
     <item
-        jar="C:\Users\Anton\Documents\Hyperion\Hyperion\Hyperion1y\Hyperion\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.1\jars\libs\internal_impl-23.0.1.jar"
-        jumboMode="false"
-        revision="23.0.1"
-        sha1="aa92916125166649d8ad4ba3940c3dd7515596d3">
-        <dex dex="C:\Users\Anton\Documents\Hyperion\Hyperion\Hyperion1y\Hyperion\app\build\intermediates\pre-dexed\debug\internal_impl-23.0.1-08fe03647b06809a22072b3ad2beca4450d01520.jar" />
-    </item>
-    <item
-        jar="C:\Users\Anton\Documents\Hyperion\Hyperion\Hyperion1y\Hyperion\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.1\jars\classes.jar"
+        jar="E:\Dokument\Dokument\Hyperion\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.1\jars\classes.jar"
         jumboMode="false"
         revision="23.0.1"
         sha1="c31e21b53ff2f74664e498248d01453a32e32d48">
-        <dex dex="C:\Users\Anton\Documents\Hyperion\Hyperion\Hyperion1y\Hyperion\app\build\intermediates\pre-dexed\debug\classes-5c3f0425885a3b8fb9770d9ba90768ea389dad14.jar" />
+        <dex dex="E:\Dokument\Dokument\Hyperion\app\build\intermediates\pre-dexed\release\classes-0ea0655748e31b03c147d66e03932961b137523c.jar" />
     </item>
     <item
-        jar="C:\Users\Anton\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\23.0.1\support-annotations-23.0.1.jar"
+        jar="C:\Users\Daniel\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\23.0.1\support-annotations-23.0.1.jar"
         jumboMode="false"
         revision="23.0.1"
         sha1="1fce89a6428c51467090d7f424e4c9c3dbd55f7e">
-        <dex dex="C:\Users\Anton\Documents\Hyperion\Hyperion\Hyperion1y\Hyperion\app\build\intermediates\pre-dexed\debug\support-annotations-23.0.1-37e85850fd6ea8d119912031a261387ee166b8d3.jar" />
+        <dex dex="E:\Dokument\Dokument\Hyperion\app\build\intermediates\pre-dexed\release\support-annotations-23.0.1-874a15b59474e8bcbfc27458d560c8a87fbff9bf.jar" />
+    </item>
+    <item
+        jar="E:\Dokument\Dokument\Hyperion\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.1\jars\libs\internal_impl-23.0.1.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="aa92916125166649d8ad4ba3940c3dd7515596d3">
+        <dex dex="E:\Dokument\Dokument\Hyperion\app\build\intermediates\pre-dexed\release\internal_impl-23.0.1-0fde769efb6a74f949bdd1a01f37bb6662aed5b4.jar" />
     </item>
 
 </items>
