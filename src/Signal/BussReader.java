@@ -3,26 +3,21 @@ package com.example.hyperion.Signal;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.example.hyperion.Signal.SignalType;
-
 import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.LinkedList;
-import java.util.List;
 
 /**
  * BussReader is responsible for connecting to the buss, reading the busses signals and updating the eventQueue based on the signals
  *
- * @author Anton Andrén
+ * @author 	Anton Andrén
  * @version 2.0
- * @since 2015-09-27
+ * @since 	2015-09-27
  */
 
 public class BussReader extends AsyncTask<LinkedList, Void, Void>

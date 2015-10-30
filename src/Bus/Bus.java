@@ -46,13 +46,11 @@ public class Bus
      * @param metrics - screen resolution.
      */
     public Bus (DisplayMetrics metrics, ArrayList<LanePosition> lanePositions){
-
         this.lanePositions = lanePositions;
         height = metrics.heightPixels;
         scrollSpeed = (int) (height/50.0f);
         double roadRatio = 28.0f/ 320.0f;
         laneLength = roadRatio * height;
-
     }
 
     /**
@@ -146,18 +144,7 @@ public class Bus
      * @param rect - The rect to reposition
      */
     private void setRectToLane(Rect rect) {
-        switch (lane) {
-            case 1: rect.set(lanePositions.get(0).getStart(), rect.top, lanePositions.get(0).getEnd(), rect.bottom);
-                break;
-            case 2: rect.set(lanePositions.get(1).getStart(), rect.top, lanePositions.get(1).getEnd(), rect.bottom);
-                break;
-            case 3: rect.set(lanePositions.get(2).getStart(), rect.top, lanePositions.get(2).getEnd(), rect.bottom);
-                break;
-            case 4: rect.set(lanePositions.get(3).getStart(), rect.top, lanePositions.get(3).getEnd(), rect.bottom);
-                break;
-            case 5: rect.set(lanePositions.get(4).getStart(), rect.top, lanePositions.get(4).getEnd(), rect.bottom);
-                break;
-        }
+        rect.set(lanePositions.get(lane-1).getStart(), rect.top, lanePositions.get(lane-1).getEnd(), rect.bottom);
     }
 
     /**

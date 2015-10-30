@@ -13,7 +13,12 @@ import android.graphics.drawable.Drawable;
  
 public class Power extends CollectibleObject
 {
-
+    /**
+     * Creates a power collectable
+     *
+     * @param rect  - size of the power collectable
+     * @param image - of the power collectable
+     */
     public Power(Rect rect, Drawable image) {
         super(rect, image);
     }

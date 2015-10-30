@@ -4,12 +4,6 @@ import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.util.Log;
 
-import com.example.hyperion.*;
-import com.example.hyperion.Obstacle.*;
-import com.example.hyperion.Core.*;
-import com.example.hyperion.Bus.*;
-import com.example.hyperion.Signal.*;
-
 /**
  * Main Game Thread for Project Hyperion. Currently initializes the playfield.
  *
@@ -24,8 +18,6 @@ public class GameThread extends Thread
 	private boolean running;
 
 	private static final Playfield playfield = new Playfield ();
-
-	private int score;
 
 	/**
 	 * Initializes a game thread to perform executions in.

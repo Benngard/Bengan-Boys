@@ -40,10 +40,10 @@ public class CollisionDetector {
                 }
             }
         }
+
         while(!lbRemove.isEmpty()){
             lightingBolts.remove(lbRemove.poll());
         }
-
 
         for (CollectibleObject collectible : obstacles.getCollectibles()){
             if(busRect.intersect(collectible.getRect())){
@@ -51,6 +51,7 @@ public class CollisionDetector {
                 collectiblesRemove.add(collectible);
             }
         }
+
         while(!collectiblesRemove.isEmpty()){
             obstacles.getCollectibles().remove(collectiblesRemove.poll());
         }

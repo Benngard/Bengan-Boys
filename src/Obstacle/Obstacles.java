@@ -60,8 +60,6 @@ public class Obstacles {
     private int obstacleMoveSpeed;
     private ArrayList<LanePosition> lanePositions;
 
-
-
     /**
      * Get the resolution of the screen and initialize the scrollspeed
      *
@@ -155,18 +153,7 @@ public class Obstacles {
      * @param rect - mutate to set this Rect's bounds to follow a specific lane
      */
     private void spawnOnLane(int lane, Rect rect) {
-        switch(lane) {
-            case 1: rect.set(lanePositions.get(0).getStart(), rect.top, lanePositions.get(0).getEnd(), 0);
-                    break;
-            case 2: rect.set(lanePositions.get(1).getStart(), rect.top, lanePositions.get(1).getEnd(), 0);
-                    break;
-            case 3: rect.set(lanePositions.get(2).getStart(), rect.top, lanePositions.get(2).getEnd(), 0);
-                    break;
-            case 4: rect.set(lanePositions.get(3).getStart(), rect.top, lanePositions.get(3).getEnd(), 0);
-                    break;
-            case 5: rect.set(lanePositions.get(4).getStart(), rect.top, lanePositions.get(4).getEnd(), 0);
-                    break;
-        }
+        rect.set(lanePositions.get(lane-1).getStart(), rect.top, lanePositions.get(lane-1).getEnd(), 0);
     }
 
     /**
@@ -213,10 +200,8 @@ public class Obstacles {
      * @version		0.3
      * @since		2015-10-13
      */
-    private class ObstaclesView extends View {
-
-
-
+    private class ObstaclesView extends View
+    {
         /**
          * Initializes a view for the obstacles.
          *
@@ -310,7 +295,6 @@ public class Obstacles {
                 obstacle.getDrawable().setBounds(obstacle.getRect());
                 obstacle.getDrawable().draw(canvas);
             }
-
         }
     }
 }

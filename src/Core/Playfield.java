@@ -36,6 +36,8 @@ import java.util.Random;
 
 public class Playfield extends Fragment
 {
+	private static final int LANES = 5;
+
 	private Bus bus;
 	private Background background;
 	private Obstacles obstacles;
@@ -88,27 +90,11 @@ public class Playfield extends Fragment
 		double laneLength = roadRatio * height;
 		double pixelLength = (laneLength/28);
 
-		int laneOnePos = (int) ((width/2) - (2.5*laneLength) + (laneLength/28));
-		int laneOneEndPos = (int) ((width/2) - (1.5*laneLength) - (laneLength/28));
-
-		int laneTwoPos = (int) ((width/2) - (1.5*laneLength) + (laneLength/28));
-		int laneTwoEndPos = (int) ((width/2) - (0.5*laneLength) - (laneLength/28));
-
-		int laneThreePos = (int) ((width/2) - (0.5*laneLength) + (laneLength/28));
-		int laneThreeEndPos = (int) ((width/2) + (0.5*laneLength) - (laneLength/28));
-
-		int laneFourPos = (int) ((width/2) + (0.5*laneLength) + (laneLength/28));
-		int laneFourEndPos = (int) ((width/2) + (1.5*laneLength) - (laneLength/28));
-
-		int laneFivePos = (int) ((width/2) + (1.5*laneLength) + (laneLength/28));
-		int laneFiveEndPos = (int) ((width/2) + (2.5*laneLength) - (laneLength/28));
-
-		lanePositions.add(0, new LanePosition(laneOnePos, laneOneEndPos));
-		lanePositions.add(1, new LanePosition(laneTwoPos, laneTwoEndPos));
-		lanePositions.add(2, new LanePosition(laneThreePos, laneThreeEndPos));
-		lanePositions.add(3, new LanePosition(laneFourPos, laneFourEndPos));
-		lanePositions.add(4, new LanePosition(laneFivePos, laneFiveEndPos));
-
+		for (int i = 0; i < LANES; i++) {
+			int laneStartPos = (int) ((width/2) - ((2.5 - i)*laneLength) + (laneLength/28));
+			int laneEndPos = (int) ((width/2) - ((1.5 - i)*laneLength) - (laneLength/28));
+			lanePositions.add(i, new LanePosition(laneStartPos, laneEndPos));
+		}
 
 		background = new Background(metrics);
 		bus = new Bus(metrics, lanePositions);

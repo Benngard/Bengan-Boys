@@ -13,15 +13,15 @@ import com.example.hyperion.ObstacleObjects.LaneObject;
  * @since		2015-09-29
  */
 
-public class LightingBolt extends LaneObject {
-
+public class LightingBolt extends LaneObject
+{
     /**
-     *  asd
+     * Creates a lightning bolt
      *
-     *  @param rect
+     * @param rect  - size of the lightning bolt
+     * @param image - of the lightning bolt  
      */
     public LightingBolt(Rect rect, Drawable image) {
         super(rect, image);
     }
-
 }
